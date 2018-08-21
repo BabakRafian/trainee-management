@@ -1,93 +1,109 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { EmployeeService } from './EmployeeService';
-import { Employee } from './employee';
+import { TraineeService } from './TraineeService';
+import { Trainee } from './trainee';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: [ EmployeeService ]
+  templateUrl: './app.searchTraineesComponent.html',
+  styleUrls: ['./styles/app.searchTraineesComponent.css'],
+  providers: [ TraineeService ]
 })
 export class AppComponent implements OnInit {
-  title = 'roundtwo';
-  employees: Employee[];
+  title = 'Search Trainees';
+  trainees: Trainee[];
 
+  @ViewChild('searchTextTraineeId') searchTextTraineeId: ElementRef;
+  @ViewChild('searchTextEmail') searchTextEmail: ElementRef;
   @ViewChild('searchTextFirst') searchTextFirst: ElementRef;
   @ViewChild('searchTextLast') searchTextLast: ElementRef;
-  @ViewChild('searchTextCity') searchTextCity: ElementRef;
-  @ViewChild('searchTextState') searchTextState: ElementRef;
+  @ViewChild('searchTextBatchId') searchTextBatchId: ElementRef;
 
-  constructor(private _employeeService: EmployeeService) {}
+  constructor(private _traineeService: TraineeService) {}
 
   ngOnInit() {
-    this.getEmployees();
+    this.getTrainees();
   }
 
-  getEmployees(): void {
-    this._employeeService.getAllEmployees()
+  getTrainees(): void {
+    this._traineeService.getAllTrainees()
       .subscribe(emps => {
-        this.employees = emps as Employee[]
+        this.trainees = emps as Trainee[]
     });
   }
   
-  getEmployeeByFirst(firs: string): void {
-    this._employeeService.getEmployeeByFirst(firs)
+  getTraineeById(t_id: string): void {
+    this._traineeService.getTraineeById(t_id)
     .subscribe(emps => {
-        this.employees = emps as Employee[]
+      this.trainees = emps as Trainee[]
     });
-    this.searchTextLast.nativeElement.value = '';
-    this.searchTextCity.nativeElement.value = '';
-    this.searchTextState.nativeElement.value = '';
-  }
-
-  getEmployeeByLast(las: string): void {
-    this._employeeService.getEmployeeByLast(las)
-    .subscribe(emps => {
-        this.employees = emps as Employee[]
-    });
-    this.searchTextFirst.nativeElement.value = '';
-    this.searchTextCity.nativeElement.value = '';
-    this.searchTextState.nativeElement.value = '';
-  }
-
-  getEmployeeByCity(cit: string): void {
-    this._employeeService.getEmployeeByCity(cit)
-    .subscribe(emps => {
-        this.employees = emps as Employee[]
-    });
+    this.searchTextEmail.nativeElement.value = '';
     this.searchTextFirst.nativeElement.value = '';
     this.searchTextLast.nativeElement.value = '';
-    this.searchTextState.nativeElement.value = '';
+    this.searchTextBatchId.nativeElement.value = '';
   }
 
-  getEmployeeByState(stat: string): void {
-    this._employeeService.getEmployeeByState(stat)
+  getTraineeByEmail(em: string): void {
+    this._traineeService.getTraineeByEmail(em)
     .subscribe(emps => {
-        this.employees = emps as Employee[]
+      this.trainees = emps as Trainee[]
     });
+    this.searchTextTraineeId.nativeElement.value = '';
     this.searchTextFirst.nativeElement.value = '';
     this.searchTextLast.nativeElement.value = '';
-    this.searchTextCity.nativeElement.value = '';
+    this.searchTextBatchId.nativeElement.value = '';
   }
 
-  getEmployeeByAll(firs: string, las: string, cit: string, stat: string): void {
-    this._employeeService.getEmployeeByAll(firs, las, cit, stat)
+  getTraineeByFirst(firs: string): void {
+    this._traineeService.getTraineeByFirst(firs)
     .subscribe(emps => {
-        this.employees = emps as Employee[]
+        this.trainees = emps as Trainee[]
+    });
+    this.searchTextTraineeId.nativeElement.value = '';
+    this.searchTextEmail.nativeElement.value = '';
+    this.searchTextLast.nativeElement.value = '';
+    this.searchTextBatchId.nativeElement.value = '';
+  }
+
+  getTraineeByLast(las: string): void {
+    this._traineeService.getTraineeByLast(las)
+    .subscribe(emps => {
+        this.trainees = emps as Trainee[]
+    });
+    this.searchTextTraineeId.nativeElement.value = '';
+    this.searchTextEmail.nativeElement.value = '';
+    this.searchTextFirst.nativeElement.value = '';
+    this.searchTextBatchId.nativeElement.value = '';
+  }
+
+  getTraineeByBatch(bat: string): void {
+    this._traineeService.getTraineeByBatch(bat)
+    .subscribe(emps => {
+        this.trainees = emps as Trainee[]
+    });
+    this.searchTextTraineeId.nativeElement.value = '';
+    this.searchTextEmail.nativeElement.value = '';
+    this.searchTextFirst.nativeElement.value = '';
+    this.searchTextLast.nativeElement.value = '';
+  }
+
+  getTraineeByAll(id: string, email: string, firs: string, las: string, batch: string): void {
+    this._traineeService.getTraineeByAll(id, email, firs, las, batch)
+    .subscribe(emps => {
+        this.trainees = emps as Trainee[]
     });
   }
 
-  addEmployee(firs: string, las: string, cit: string, stat: string): void {
-    this._employeeService.addEmployee(firs, las, cit, stat)
+  addTrainee(trainee_id: string, email: string, firs: string, las: string, batch_id: string ): void {
+    this._traineeService.addTrainee(trainee_id, email, firs, las, batch_id)
     .subscribe(emps => {
-        this.employees = emps as Employee[]
+        this.trainees = emps as Trainee[]
     });
   }
 
-  deleteEmployee(_id: string): void {
-    this._employeeService.deleteEmployee(_id)
+  deleteTrainee(_id: string): void {
+    this._traineeService.deleteTrainee(_id)
     .subscribe(emps => {
-      this.employees = emps as Employee[]
+      this.trainees = emps as Trainee[]
     });
   }
 }
