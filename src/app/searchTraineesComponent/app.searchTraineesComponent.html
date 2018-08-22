@@ -24,7 +24,7 @@
     <div class="panel-body list-group">
       <ul *ngFor="let trainee of trainees">
         <li class="list-group-item">
-          <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteEmployee(emp._id)">X</button>
+          <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteTrainee(trainee.trainee_id)">X</button>
           {{trainee.trainee_id}}: {{trainee.firstname}} {{trainee.lastname}} ({{trainee.batch_id}})
         </li>
       </ul>

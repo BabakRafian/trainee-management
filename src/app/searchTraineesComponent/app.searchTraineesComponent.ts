@@ -1,14 +1,14 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { TraineeService } from './TraineeService';
-import { Trainee } from './trainee';
+import { TraineeService } from '../services/TraineeService';
+import { Trainee } from '../models/trainee';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.searchTraineesComponent.html',
-  styleUrls: ['./styles/app.searchTraineesComponent.css'],
+  styleUrls: ['./app.searchTraineesComponent.css'],
   providers: [ TraineeService ]
 })
-export class AppComponent implements OnInit {
+export class AppSearchTraineesComponent implements OnInit {
   title = 'Search Trainees';
   trainees: Trainee[];
 
