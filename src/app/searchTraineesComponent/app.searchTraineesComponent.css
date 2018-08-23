@@ -37,8 +37,9 @@ li {
 }
 
 input {
-    margin-top: 0.5%;
+    margin-top: 2%;
     margin-left: 3%;
+	margin-bottom: 2%;
 	width: 60%;
 }
 
@@ -57,23 +58,27 @@ input {
 	width: 30%;
 	border-radius: 3px;
 	padding: 10px;
+	min-height: 335px;
 }
 
 .panel-primary {
 	margin-left: 3%;
 	width: 30%;
-	min-height: 342px;
 }
 
 .list-group{
-    max-height: 350px;
-	min-height: 398px;
+	height: 302px;
     margin-bottom: 10px;
     overflow-y:scroll;
     -webkit-overflow-scrolling: touch;
+	align-content: center;
+	margin-top: 5%!important;
 }
 .panel {
 	padding: 0px;
+}
+.panel-body {
+	height: 302px;
 }
 .panel-primary {
 	padding: 0px;

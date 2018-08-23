@@ -12,6 +12,10 @@ app.use(cors());
 app.options('*', cors());
 app.use(bodyParser.urlencoded({extended:true}));
 
+/*
+*   Returns the full list of trainees in the collection. This will be called when the page 
+*   initially loads.
+*/
 app.route('/traineelist').get((req, res) => {
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('trainees');
@@ -25,6 +29,13 @@ app.route('/traineelist').get((req, res) => {
     });
 });
 
+/*
+*   This code will need to be "re-routed" or changed altogether since there is no longer
+*   any functionality for adding a trainee from the traineelist page (search trainee page).
+*   Most likely the best bet will be to send a whole json array of trainees (when a batch is 
+*   created) and to use the insertMany mongodb method to add all of the trainees at once to 
+*   the trainee collection
+*/
 app.route('/traineelist/add').get((req, res) => {
     let newEmp = {trainee_id: req.query.trainee_id, email: req.query.email, firstname: req.query.first, lastname: req.query.last, batch_id: req.query.batch_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
@@ -41,6 +52,11 @@ app.route('/traineelist/add').get((req, res) => {
     });
 });
 
+/*
+*   Queries the trainee collection for any trainee with the specified trainee_id.
+*   Uses the deleteOne mongodb method because only one trainee will have that trainee_id.
+*   Then returns the trainees still in the collection.
+*/
 app.route('/traineelist/delete').get((req, res) => {
     let em = {trainee_id: req.query.trainee_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
@@ -58,48 +74,32 @@ app.route('/traineelist/delete').get((req, res) => {
     });
 });
 
-app.route('/traineelist/id:name').get((req, res) => {
-  let requestedEmpName = req.params['name'];
-  requestedEmpName = requestedEmpName.substring(1, requestedEmpName.length);
-  res.status(200).send(trainees.filter(emp => { return emp.trainee_id == requestedEmpName }));
-});
-
-app.route('/traineelist/email:name').get((req, res) => {
-  let requestedEmpName = req.params['name'];
-  requestedEmpName = requestedEmpName.substring(1, requestedEmpName.length);
-  res.status(200).send(trainees.filter(emp => { return emp.email.toLowerCase() == requestedEmpName.toLowerCase() }));
-});
-
-app.route('/traineelist/first:name').get((req, res) => {
-  let requestedEmpName = req.params['name'];
-  requestedEmpName = requestedEmpName.substring(1, requestedEmpName.length);
-  res.status(200).send(trainees.filter(emp => { return emp.firstname.toLowerCase() == requestedEmpName.toLowerCase() }));
-});
-
-app.route('/traineelist/last:name').get((req, res) => {
-  let requestedEmpName = req.params['name'];
-  requestedEmpName = requestedEmpName.substring(1, requestedEmpName.length);
-  res.status(200).send(trainees.filter(emp => { return emp.lastname.toLowerCase() == requestedEmpName.toLowerCase() }));
-});
-
-app.route('/traineelist/batch:name').get((req, res) => {
-  let requestedEmpName = req.params['name'];
-  requestedEmpName = requestedEmpName.substring(1, requestedEmpName.length);
-  res.status(200).send(trainees.filter(emp => { return emp.batch_id.toLowerCase() == requestedEmpName.toLowerCase() }));
-});
-
-app.route('/traineelist/all').get((req, res) => {
+/*
+*   This query will return the trainee based on all of the fields being specified, just
+*   the trainee_id or email fields being specified (which will be unique), or if the search
+*   include the firstname, lastname, and batch_id fields. We do not want to include a general search
+*   for batch_id to match on because then if the trainee_id field was given a value and the batch_id field
+*   was given a value, it would still return everyone in that batch even though they would have different
+*   trainee ID's
+*/
+app.route('/traineelist/search').get((req, res) => {
     let t_id = req.query.trainee_id;
     let em = req.query.email;
     let first = req.query.firstname;
-    let last = req.query.last;
+    let last = req.query.lastname;
     let b_id = req.query.batch_id;
-    let query = {trainee_id: t_id, email: em, firstname: first, lastname: last, batch_id: b_id};
-  res.status(200).send(trainees.filter(emp => { return emp.trainee_id == t_id &&
-                                                    emp.email.toLowerCase() == em.toLowerCase() &&
-                                                    emp.firstname.toLowerCase() == first.toLowerCase() &&
-                                                    emp.lastname.toLowerCase() == last.toLowerCase() &&
-                                                    emp.batch_id.toLowerCase() == b_id.toLowerCase()}));
+    let query = {"$or": [{"trainee_id": t_id, "email": em, "firstname": first, "lastname": last, "batch_id": b_id},
+                        {"trainee_id": t_id}, {"email": em}, {"$and": [{"firstname": first}, {"lastname": last}, {"batch_id": b_id}]}]};
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('trainees');
+        if( err ) console.log("Unable connect to database");
+        collection.find(query).toArray(function(err, result) {
+            if (err) throw err;
+            db.close();
+            trainees = result;
+            res.status(200).send(trainees);
+        });
+    });
 });
 
 var server = app.listen(3000, function() {
