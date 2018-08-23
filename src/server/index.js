@@ -42,7 +42,7 @@ app.route('/traineelist/add').get((req, res) => {
 });
 
 app.route('/traineelist/delete').get((req, res) => {
-    let em = {trainee_id: new ObjectID(req.query.trainee_id)};
+    let em = {trainee_id: req.query.trainee_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('trainees');
         collection.deleteOne(em, function(err, obj) {
@@ -89,11 +89,12 @@ app.route('/traineelist/batch:name').get((req, res) => {
 });
 
 app.route('/traineelist/all').get((req, res) => {
-  let t_id = req.query.trainee_id;
-  let em = req.query.email;
-  let first = req.query.firstname;
-  let last = req.query.last;
-  let b_id = req.query.batch_id;
+    let t_id = req.query.trainee_id;
+    let em = req.query.email;
+    let first = req.query.firstname;
+    let last = req.query.last;
+    let b_id = req.query.batch_id;
+    let query = {trainee_id: t_id, email: em, firstname: first, lastname: last, batch_id: b_id};
   res.status(200).send(trainees.filter(emp => { return emp.trainee_id == t_id &&
                                                     emp.email.toLowerCase() == em.toLowerCase() &&
                                                     emp.firstname.toLowerCase() == first.toLowerCase() &&
