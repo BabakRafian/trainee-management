@@ -1,0 +1,80 @@
+html {
+	background-color: #DDDDDD;
+	margin: auto;
+}
+
+.jumbotron {
+	background-image: url(../../tata_pattern.jpg);
+}
+
+h1 {
+	font-size: 24px;
+	background-color:#5f68c3;
+	color: white;
+	border-radius: 3px;
+	text-align: center;
+	margin: 5px 10px;
+	padding: 35px 5px 35px 5px;
+}
+
+h3 {
+	background-color: lightgray;
+	font-size: large;
+	padding: 10px;
+	margin-left: 20%;
+	margin-bottom: .02%;
+	width: 30%;
+	border-radius: 3px;
+}
+
+li {
+	background-color: lightgray;
+	border-radius: 4px;
+	padding: 8px;
+	list-style: square;
+	width: 100%;
+	font-size: medium;
+}
+
+input {
+    margin-top: 0.5%;
+    margin-left: 3%;
+	width: 60%;
+}
+
+.btn-default {
+	margin-left: 3%;
+}
+
+.custom {
+	margin-top: 1%;
+	margin-left: 3%;
+}
+
+.form-group {
+	background-color: #5f68c3;
+	margin-left: 20%;
+	width: 30%;
+	border-radius: 3px;
+	padding: 10px;
+}
+
+.panel-primary {
+	margin-left: 3%;
+	width: 30%;
+	min-height: 342px;
+}
+
+.list-group{
+    max-height: 350px;
+	min-height: 398px;
+    margin-bottom: 10px;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+.panel {
+	padding: 0px;
+}
+.panel-primary {
+	padding: 0px;
+}

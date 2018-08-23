@@ -1,1 +1,112 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+	background-color: #DDDDDD;
+	margin: auto;
+}
+a {
+	font-size: 16px;
+}
+.container-fluid {
+	max-height: 200px;
+}
+.jumbotron {
+	background-image: url(tata_pattern.jpg);
+    color: white;
+	font-size: 18px;
+	padding-left: 2.5%;
+	padding-right: 2.5%;
+}
+.navbar-header {
+	color: white;
+	font-size: 24px;
+}
+h1 {
+	font-size: 24px;
+	background-color:#5f68c3;
+	color: white;
+	border-radius: 5px;
+	text-align: center;
+	margin: 5px 10px;
+	padding: 20px 5px 80px 5px;
+	height: 100px;
+}
+.footer {
+    background-color: #DDDDDD;
+}
+.navbar-header {
+  float: none;
+}
+.navbar-left,.navbar-right {
+  float: none !important;
+}
+button.navbar-toggle {
+  display: block;
+  background-color: white;
+  width: 52px;
+  max-height: 52px;
+  float: left;
+  left: 50px;
+}
+button.navbar-toggle:hover {
+  background-color: #DDDDDD!important;
+}
+button.navbar-toggle:active {
+  background-color: #DDDDDD!important;
+}
+button.navbar-toggle:focus {
+  background-color: #DDDDDD!important;
+}
+.glyphicon {
+	float: left;
+	font-size: 0.5em;
+	color: #5f68c3;
+}
+.navbar-collapse {
+  background-color: #F3F2F2;
+  top: 23px;
+}
+.navbar-collapse.in {
+  top: 13px!important;
+}
+div.navbar-collapse.collapse.in {
+	position: absolute;
+    left: 65px;
+    top: 85px!important;
+	width: 15%;
+}
+div.navbar-collapse.collapsing {
+	position: absolute;
+    left: 65px;
+    top: 85px!important;
+	width: 15%;
+}
+.navbar-fixed-top {
+  top: 0;
+}
+.navbar-collapse.collapse {
+  display: none!important;
+  width: 20%;
+  float: right;
+}
+
+.navbar-nav {
+  float: left;
+}
+.navbar-nav>li {
+  float: none;
+  text-align: left;
+}
+.navbar-nav>li>a {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.collapse.in{
+  display:block !important;
+}
+.navbar-header {
+	font-size: 24px;
+	text-align: center;
+	color: white;
+}
+.navbar {
+	background-color: #5f68c3;
+}

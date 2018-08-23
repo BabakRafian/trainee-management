@@ -1,0 +1,33 @@
+
+<div class="row">
+  <h3 class="text-center">Search Trainee List</h3>
+  <div class="col-lg-4 form-group"> 
+    <input type="text" class="form-control" id="searchTextIdTraineeId" #searchTextTraineeId placeholder="Trainee ID">
+    <button type="button" class="btn btn-default" (click)="getTraineeById(searchTextTraineeId.value)">Trainee ID</button>
+    <br>
+    <input type="text" class="form-control" id="searchTextIdEmail" #searchTextEmail placeholder="Email Address">
+    <button type="button" class="btn btn-default" (click)="getTraineeByEmail(searchTextEmail.value)">Email</button>
+    <br>
+    <input type="text" class="form-control" id="searchTextIdFirst" #searchTextFirst placeholder="First Name">
+    <button type="button" class="btn btn-default" (click)="getTraineeByFirst(searchTextFirst.value)">First Name</button>
+    <br>
+    <input type="text" class="form-control" id="searchTextIdLast" #searchTextLast placeholder="Last Name">
+    <button type="button" class="btn btn-default" (click)="getTraineeByLast(searchTextLast.value)">Last Name</button>
+    <br>
+    <input type="text" class="form-control" id="searchTextIdBatchId" #searchTextBatchId placeholder="Batch ID">
+    <button type="button" class="btn btn-default" (click)="getTraineeByBatch(searchTextBatchId.value)">Batch ID</button>
+    <br>
+    <button type="button" id="FullSearch" class="btn btn-default custom" (click)="getTraineeByAll(searchTextTraineeId.value, searchTextEmail.value, searchTextFirst.value, searchTextLast.value, searchTextBatchId.value)">Full Criteria Search</button>
+    <button type="button" id="AllTrainees" class="btn btn-default custom" (click)="getTrainees()">All Trainees</button>
+  </div>
+  <div class="panel panel-primary col-lg-4">
+    <div class="panel-body list-group">
+      <ul *ngFor="let trainee of trainees">
+        <li class="list-group-item">
+          <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteTrainee(trainee.trainee_id)">X</button>
+          {{trainee.trainee_id}}: {{trainee.firstname}} {{trainee.lastname}} ({{trainee.batch_id}})
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
