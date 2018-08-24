@@ -143,7 +143,7 @@ app.route('/tasklist/addtask').get((req, res) => {
 *   Uses the deleteOne mongodb method because only one task will have that task_id.
 *   Then returns the tasks still in the collection.
 */
-app.route('/traineelist/delete').get((req, res) => {
+app.route('/tasklist/deletetask').get((req, res) => {
     let del = {task_id: req.query.task_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('tasks');
