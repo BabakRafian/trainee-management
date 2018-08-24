@@ -9,6 +9,7 @@ export class DBUtility{
 
     constructor(baseURL = 'https://tmdatabase-864c.restdb.io/rest/' 
                 , apiKey = '369d82557cfeecc580923e9e1788e3444271f'){
+
         this.baseURL = baseURL;
         this.apiKey = apiKey;
     }
@@ -16,11 +17,12 @@ export class DBUtility{
  * GET all documents from the collection
  * @param collectionName 
  * @param cb 
+ * @returns JSON object of the all documents in the collection
+ * 
  */
     public getAllDocumentsFrom(collectionName:string, cb:(res: any[])=>any){
+        
         let URL = this.baseURL + collectionName;
-
-        console.log(URL);
         var options = { method: 'GET',
         url: URL,
         headers: 
@@ -38,8 +40,9 @@ export class DBUtility{
      * @param collectionName 
      * @param document 
      * @param cb 
+     * @returns body of the message from db service
      */
-    public addNewDocument(collectionName:string, document: any, cb:(res: any)=>any){
+    public insertOne(collectionName:string, document: any, cb:(res: any)=>any){
         var options = { method: 'POST',
         url: 'https://tmdatabase-864c.restdb.io/rest/' + collectionName,
         headers: 
@@ -55,8 +58,15 @@ export class DBUtility{
         //console.log(body);
         });
     }
-
-    public deleteDocument(collectionName:string, document_id:string, cb:(res: any)=>any){
+/**
+ * Deletes one document from the collection
+ *  
+ * @param collectionName 
+ * @param document_id 
+ * @param cb 
+ * @returns deleted documents _id
+ */
+    public deleteOne(collectionName:string, document_id:string, cb:(res: any)=>any){
         var options = { method: 'DELETE',
         url: 'https://tmdatabase-864c.restdb.io/rest/'+ collectionName + '/' + document_id,
         headers: 
@@ -69,6 +79,27 @@ export class DBUtility{
             cb(body);
             //console.log(body);
         });
+    }
+
+/**
+ * Queries the collection
+ * @param collectionName 
+ * @param query 
+ * @param cb 
+ */
+    public find(collectionName:string, query:string, cb:(res: any)=>any){
+        let URL = this.baseURL + collectionName + '?q=' + query;
+        var options = { method: 'GET',
+        url: URL,
+        headers: 
+            { 'cache-control': 'no-cache',
+                'x-apikey': this.apiKey } };
+
+        request(options, function (error, res, body) {
+            if (error) throw new Error(error);
+            cb(JSON.parse(body));
+            
+        })
     }
 
 
