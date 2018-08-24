@@ -26,9 +26,15 @@ var DBUtility = /** @class */ (function () {
             cb(JSON.parse(body));
         });
     };
-    DBUtility.prototype.addNewDocument = function (document, cb) {
+    /**
+     * Adds a new entry to the given collection name
+     * @param collectionName
+     * @param document
+     * @param cb
+     */
+    DBUtility.prototype.addNewDocument = function (collectionName, document, cb) {
         var options = { method: 'POST',
-            url: 'https://tmdatabase-864c.restdb.io/rest/trainees',
+            url: 'https://tmdatabase-864c.restdb.io/rest/' + collectionName,
             headers: { 'cache-control': 'no-cache',
                 'x-apikey': '369d82557cfeecc580923e9e1788e3444271f',
                 'content-type': 'application/json' },
@@ -37,8 +43,8 @@ var DBUtility = /** @class */ (function () {
         request(options, function (error, response, body) {
             if (error)
                 throw new Error(error);
-            cb(JSON.parse(body));
-            console.log(body);
+            cb(response);
+            //console.log(body);
         });
     };
     return DBUtility;

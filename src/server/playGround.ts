@@ -5,6 +5,8 @@ import {City} from "./models/city";
 //var DBUtility = require('./dbUtility');
 
 let db = new DBUtility();
+
+
 let city_pref:City={
     state: "New York",
     city:"New Jersey"
@@ -27,7 +29,7 @@ let tr1: Trainee = {
 // db.getAllRecordsFrom('trainees',(body: any[])=>{
 //     console.log(body[0]);
 // });
-
-db.addNewDocument(tr1,(body:any[])=>{
+let collectionName = 'batches';
+db.addNewDocument(collectionName,tr1,(body:any)=>{
     console.log(body);
 });
