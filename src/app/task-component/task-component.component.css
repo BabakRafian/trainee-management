@@ -1,0 +1,99 @@
+html {
+	background-color: #DDDDDD;
+	margin: auto;
+}
+
+.jumbotron {
+	background-image: url(../../tata_pattern.jpg);
+}
+
+label {
+	margin-left: 3%;
+	color: white;
+	font-size: inherit;
+	font-family: inherit;
+}
+
+h1 {
+	font-size: 24px;
+	background-color:#5f68c3;
+	color: white;
+	border-radius: 3px;
+	text-align: center;
+	margin: 5px 10px;
+	padding: 35px 5px 35px 5px;
+}
+
+h3 {
+	background-color: lightgray;
+	font-size: large;
+	padding: 10px;
+	margin-left: 20%;
+	margin-bottom: .02%;
+	width: 30%;
+	border-radius: 3px;
+}
+
+li {
+	background-color: lightgray;
+	border-radius: 4px;
+	padding: 8px;
+	list-style: square;
+	width: 100%;
+	font-size: medium;
+}
+
+input {
+    margin-top: 2%;
+    margin-left: 3%;
+	margin-bottom: 2%;
+	width: 60%;
+}
+
+textarea {
+	margin-left: 3%;
+	width: 70%;
+	align-content: left;
+	height: 70px;
+}
+
+.btn-default {
+	margin-left: 3%;
+}
+
+.custom {
+	margin-top: 1%;
+	margin-left: 3%;
+}
+
+.form-group {
+	background-color: #5f68c3;
+	margin-left: 20%;
+	width: 30%;
+	border-radius: 3px;
+	padding: 10px;
+	min-height: 335px;
+}
+
+.panel-primary {
+	margin-left: 3%;
+	width: 30%;
+}
+
+.list-group{
+	height: 302px;
+    margin-bottom: 10px;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling: touch;
+	align-content: center;
+	margin-top: 5%!important;
+}
+.panel {
+	padding: 0px;
+}
+.panel-body {
+	height: 302px;
+}
+.panel-primary {
+	padding: 0px;
+}

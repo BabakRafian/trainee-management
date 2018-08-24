@@ -7,6 +7,7 @@ var ObjectID = require('mongodb').ObjectID;
 var cors = require('cors');
 var app = express();
 var trainees = [];
+var tasks = [];
 
 app.use(cors());
 app.options('*', cors());
@@ -98,6 +99,63 @@ app.route('/traineelist/search').get((req, res) => {
             db.close();
             trainees = result;
             res.status(200).send(trainees);
+        });
+    });
+});
+
+/*
+*   Queries the tasks collection for all of the tasks. Used when initially loading the page
+*/
+app.route('/tasklist').get((req, res) => {
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('tasks');
+        if( err ) console.log("Unable connect to database");
+        collection.find({}).toArray(function(err, result) {
+            if (err) throw err;
+            db.close();
+            tasks = result;
+            res.status(200).send(tasks);
+        });
+    });
+});
+
+/*
+*   Adds a task to the tasks collection
+*/
+app.route('/tasklist/addtask').get((req, res) => {
+    let newTask = {task_id: req.query.task_id, course_id: req.query.course_id, task_description: req.query.task_description};
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('tasks');
+        collection.insertOne(newTask, function(err, obj) {
+            if( err ) console.log("Unable to add task");
+            collection.find({}).toArray(function(err, result) {
+                if (err) throw err;
+                db.close();
+                tasks = result;
+                res.status(200).send(tasks);
+            });
+        });
+    });
+});
+
+/*
+*   Queries the tasks collection for any task with the specified task_id.
+*   Uses the deleteOne mongodb method because only one task will have that task_id.
+*   Then returns the tasks still in the collection.
+*/
+app.route('/traineelist/delete').get((req, res) => {
+    let del = {task_id: req.query.task_id};
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('tasks');
+        collection.deleteOne(del, function(err, obj) {
+            if (err) throw err;
+            console.log("Task Deleted");
+            collection.find({}).toArray(function(err, result) {
+                if (err) throw err;
+                db.close();
+                tasks = result;
+                res.status(200).send(tasks);
+            });
         });
     });
 });
