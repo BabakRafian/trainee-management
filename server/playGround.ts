@@ -29,7 +29,11 @@ let tr1: Trainee = {
 // db.getAllRecordsFrom('trainees',(body: any[])=>{
 //     console.log(body[0]);
 // });
-let collectionName = 'batches';
-db.addNewDocument(collectionName,tr1,(body:any)=>{
-    console.log(body);
+let collectionName = 'trainees';
+let query = '{"first_name":"someone"}'
+db.find(collectionName,query,(body:any[])=>{
+    console.log(body[0]._id);
+    db.deleteOne(collectionName,body[0]._id,(body:any)=>{
+        console.log(body);
+    });
 });

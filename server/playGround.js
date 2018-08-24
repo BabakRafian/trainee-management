@@ -3,7 +3,6 @@ exports.__esModule = true;
 var dbUtility_1 = require("./dbUtility");
 //var DBUtility = require('./dbUtility');
 var db = new dbUtility_1.DBUtility();
-var collectionName = 'trainees';
 var city_pref = {
     state: "New York",
     city: "New Jersey"
@@ -24,6 +23,11 @@ var tr1 = {
 // db.getAllRecordsFrom('trainees',(body: any[])=>{
 //     console.log(body[0]);
 // });
-db.addNewDocument(collectionName, tr1, function (body) {
-    console.log(body);
+var collectionName = 'trainees';
+var query = '{"first_name":"someone"}';
+db.find(collectionName, query, function (body) {
+    console.log(body[0]._id);
+    db.deleteOne(collectionName, body[0]._id, function (body) {
+        console.log(body);
+    });
 });
