@@ -12,6 +12,8 @@ var DBUtility = /** @class */ (function () {
      * GET all documents from the collection
      * @param collectionName
      * @param cb
+     * @returns JSON object of the all documents in the collection
+     *
      */
     DBUtility.prototype.getAllDocumentsFrom = function (collectionName, cb) {
         var URL = this.baseURL + collectionName;
@@ -30,6 +32,7 @@ var DBUtility = /** @class */ (function () {
      * @param collectionName
      * @param document
      * @param cb
+     * @returns body of the message from db service
      */
     DBUtility.prototype.insertOne = function (collectionName, document, cb) {
         var options = { method: 'POST',
@@ -46,6 +49,14 @@ var DBUtility = /** @class */ (function () {
             //console.log(body);
         });
     };
+    /**
+     * Deletes one document from the collection
+     *
+     * @param collectionName
+     * @param document_id
+     * @param cb
+     * @returns deleted documents _id
+     */
     DBUtility.prototype.deleteOne = function (collectionName, document_id, cb) {
         var options = { method: 'DELETE',
             url: 'https://tmdatabase-864c.restdb.io/rest/' + collectionName + '/' + document_id,
@@ -59,6 +70,12 @@ var DBUtility = /** @class */ (function () {
             //console.log(body);
         });
     };
+    /**
+     * Queries the collection
+     * @param collectionName
+     * @param query
+     * @param cb
+     */
     DBUtility.prototype.find = function (collectionName, query, cb) {
         var URL = this.baseURL + collectionName + '?q=' + query;
         var options = { method: 'GET',
