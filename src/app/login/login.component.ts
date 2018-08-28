@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Credentials } from '../models/credentials';
 import {LoginService} from '../services/login.service';
+import { MessageService } from '../services/message.service';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +17,10 @@ export class LoginComponent implements OnInit {
     password: ''
   };
 
-  constructor(private loginService: LoginService) { }
+  constructor(private loginService: LoginService, private messageService: MessageService) { }
 
   ngOnInit() {
+    this.messageService.clear();
   }
 
   onSelect(passedCredentials: Credentials): void {
