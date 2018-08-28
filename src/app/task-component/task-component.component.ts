@@ -1,10 +1,17 @@
+/*
+* CWM
+* Task Component
+* Able to add tasks in general and attribute them to a single batch 
+* or just create the task for the general tasks collection
+* View all the tasks currently assigned to any batch
+*/
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { TaskService } from '../services/TaskService';
 import { Task } from '../models/task';
 import { Assigned_Task } from '../models/assignedTask';
 
 @Component({
-  selector: 'app-root',
+  selector: 'task-component',
   templateUrl: './task-component.component.html',
   styleUrls: ['./task-component.component.css'],
   providers: [ TaskService ]
@@ -39,28 +46,17 @@ export class AppTaskComponent implements OnInit {
         this.tasks = tsks as Task[]
     });
   }
-  // getAssignedTasks(): void {
-  //   this._taskService.getAssignedTasks()
-  //     .subscribe(assigned => {
-  //       this.assigned_tasks = Assigned as Assigned_Task[]
-  //   });
-  // }
 
   /*
   * Used to start the search for a trainee. Sends the value of all of the input fields, sort out 
   * which ones are being used for the query on the back-end
   */
-  addTask(taskId: string, courseId: string, batchId: string, deadline: Date, desc: string): void {
-    //var newTask = new Task(taskId, courseId, desc);
-    this._taskService.addTask(taskId, courseId, desc)
+  addTask(taskId: string, courseId: string, batchId: string, deadline: string, desc: string): void {
+    this._taskService.addTask(taskId, courseId, batchId, deadline, desc)
     .subscribe(tsks => {
         this.tasks = tsks as Task[]
     });
-    // var newAssigned = new Assigned_Task(newTask, batchId, deadline)
-    // this._taskService.addAssignedTask(newAssigned)
-    // .subscribe(tsks => {
-    //     this.assigned_tasks = tsks as Assigned_Task[]
-    // });
+    this.getTasks();//Should seperate out the functionality of adding a general task and adding a task to a batch
     this.taskId.nativeElement.value='';
     this.courseId.nativeElement.value='';
     this.batchId.nativeElement.value='';
@@ -69,18 +65,14 @@ export class AppTaskComponent implements OnInit {
   }
 
   /*
-  * Activated by the red X to the left of the trainee's name on the list. Sends the trainee_id
-  * of the trainee to be deleted to the service class. trainee_id is a unique identifier so no 
-  * need to send any other info about the trainee
+  * Activated by the red X to the left of the trainee's name on the list. Sends the task_id
+  * of the task to be deleted to the service class. task_id is a unique identifier so no 
+  * need to send any other info about the task
   */
   deleteTask(_id: string): void {
     this._taskService.deleteTask(_id)
     .subscribe(tsks => {
       this.tasks = tsks as Task[]
     });
-    // this._taskService.deleteAssignedTask(_id)
-    // .subscribe(tsks => {
-    //   this.assigned_tasks = tsks as Assigned_Task[]
-    // });
   }
 }

@@ -1,3 +1,9 @@
+/*
+* CWM
+* View Batch Component
+* General view of a single batch. Able to add tasks specifically to this batch, view tasks for batch,
+* and view all of the trainees in this batch
+*/
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { TaskService } from '../services/TaskService';
 import { TraineeService } from '../services/TraineeService';
@@ -7,7 +13,7 @@ import { Trainee } from '../models/trainee';
 
 
 @Component({
-  selector: 'app-root',
+  selector: 'view-batch',
   templateUrl: './view-batch-component.component.html',
   styleUrls: ['./view-batch-component.component.css'],
   providers: [ TaskService, TraineeService ]
@@ -17,6 +23,8 @@ export class ViewBatchComponent implements OnInit {
   tasks: Task[];
   assigned_tasks: Assigned_Task[];
   trainees: Trainee[];
+  batchIdText = "JUN_18_1";//will get this from session attributes
+  startdate = '';//will also get this from session attributes
 
   @ViewChild('taskId') taskId: ElementRef;
   @ViewChild('courseId') courseId: ElementRef;
@@ -30,9 +38,8 @@ export class ViewBatchComponent implements OnInit {
   * ngOnInit executes when the page is loaded. 
   */
   ngOnInit() {
-    this.getTasks();
+    this.getBatchTasks();
     this.getTrainees();
-    // this.getAssignedTasks();
   }
 
   /*
@@ -48,37 +55,24 @@ export class ViewBatchComponent implements OnInit {
   /*
   * Go ahead and load a list of all current tasks that exist
   */
-  getTasks(): void {
-    this._taskService.getTasks()
+  getBatchTasks(): void {
+    this._taskService.getBatchTasks(this.batchIdText)
       .subscribe(tsks => {
         this.tasks = tsks as Task[]
     });
   }
-  // getAssignedTasks(): void {
-  //   this._taskService.getAssignedTasks()
-  //     .subscribe(assigned => {
-  //       this.assigned_tasks = Assigned as Assigned_Task[]
-  //   });
-  // }
 
   /*
   * Used to start the search for a trainee. Sends the value of all of the input fields, sort out 
   * which ones are being used for the query on the back-end
   */
-  addTask(taskId: string, courseId: string, batchId: string, deadline: Date, desc: string): void {
-    //var newTask = new Task(taskId, courseId, desc);
-    this._taskService.addTask(taskId, courseId, desc)
+  addTask(taskId: string, courseId: string, deadline: string, desc: string): void {
+    this._taskService.addTask(taskId, courseId, this.batchIdText, deadline, desc)
     .subscribe(tsks => {
-        this.tasks = tsks as Task[]
-    });
-    // var newAssigned = new Assigned_Task(newTask, batchId, deadline)
-    // this._taskService.addAssignedTask(newAssigned)
-    // .subscribe(tsks => {
-    //     this.assigned_tasks = tsks as Assigned_Task[]
-    // });
+       this.tasks = tsks as Task[];
+     });//batchIdText supplied by session
     this.taskId.nativeElement.value='';
     this.courseId.nativeElement.value='';
-    this.batchId.nativeElement.value='';
     this.deadline.nativeElement.value='';
     this.taskDescription.nativeElement.value='';
   }
@@ -92,11 +86,8 @@ export class ViewBatchComponent implements OnInit {
     this._taskService.deleteTask(_id)
     .subscribe(tsks => {
       this.tasks = tsks as Task[]
+      this.getBatchTasks();//Populate box with only this batch's tasks. Probably should separate delete/add tasks for batches/general
     });
-    // this._taskService.deleteAssignedTask(_id)
-    // .subscribe(tsks => {
-    //   this.assigned_tasks = tsks as Assigned_Task[]
-    // });
   }
 
   /*

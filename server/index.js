@@ -14,6 +14,7 @@ app.options('*', cors());
 app.use(bodyParser.urlencoded({extended:true}));
 
 /*
+*   CWM
 *   Returns the full list of trainees in the collection. This will be called when the page 
 *   initially loads.
 */
@@ -31,6 +32,7 @@ app.route('/traineelist').get((req, res) => {
 });
 
 /*
+*   CWM
 *   This code will need to be "re-routed" or changed altogether since there is no longer
 *   any functionality for adding a trainee from the traineelist page (search trainee page).
 *   Most likely the best bet will be to send a whole json array of trainees (when a batch is 
@@ -54,6 +56,7 @@ app.route('/traineelist/add').get((req, res) => {
 });
 
 /*
+*   CWM
 *   Queries the trainee collection for any trainee with the specified trainee_id.
 *   Uses the deleteOne mongodb method because only one trainee will have that trainee_id.
 *   Then returns the trainees still in the collection.
@@ -76,6 +79,7 @@ app.route('/traineelist/delete').get((req, res) => {
 });
 
 /*
+*   CWM
 *   This query will return the trainee based on all of the fields being specified, just
 *   the trainee_id or email fields being specified (which will be unique), or if the search
 *   include the firstname, lastname, and batch_id fields. We do not want to include a general search
@@ -104,6 +108,7 @@ app.route('/traineelist/search').get((req, res) => {
 });
 
 /*
+*   CWM
 *   Queries the tasks collection for all of the tasks. Used when initially loading the page
 */
 app.route('/tasklist').get((req, res) => {
@@ -120,43 +125,76 @@ app.route('/tasklist').get((req, res) => {
 });
 
 /*
-*   Adds a task to the tasks collection
+*   CWM
+*   Queries the tasks collection for all of the tasks. Used when initially loading the page
 */
-app.route('/tasklist/addtask').get((req, res) => {
-    let newTask = {task_id: req.query.task_id, course_id: req.query.course_id, task_description: req.query.task_description};
+app.route('/tasklist/batch').get((req, res) => {
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
-        var collection = db.db().collection('tasks');
-        collection.insertOne(newTask, function(err, obj) {
-            if( err ) console.log("Unable to add task");
-            collection.find({}).toArray(function(err, result) {
-                if (err) throw err;
+        var collection = db.db().collection('batches');
+        if( err ) console.log("Unable connect to database");
+        var cursor = collection.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0}).forEach(function(element) {
+                tasks = element.tasks;
+            }, function(err) {
                 db.close();
-                tasks = result;
                 res.status(200).send(tasks);
-            });
         });
     });
 });
 
 /*
+*   CWM
+*   First adds a task to the tasks collection. Then it goes into the batches collection and updates the proper batch document
+*   by pushing the new assigned task onto it. Each of these entries into the assigned_tasks array will have a task object and a deadline
+*/
+app.route('/tasklist/addtask').get((req, res) => {
+    let newTask = {"task_id": req.query.task_id, "course_id": req.query.course_id, "task_description": req.query.task_description};
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('tasks');
+        collection.insertOne(newTask, function(err, obj) {
+            if( err ) console.log("Unable to add task");
+        });
+        var collection2 = db.db().collection('batches');
+        collection2.updateOne({batch_id: req.query.batch_id}, 
+                            {$push: //Push is the mongodb command to add an object to an array
+                                {tasks: 
+                                    {task_id: req.query.task_id,
+                                    course_id: req.query.course_id,
+                                    task_description: req.query.task_description, 
+                                    deadline: req.query.deadline}}}, 
+                            function(err, obj) {
+                                if( err ) console.log("Unable to add task");
+                                var cursor = collection2.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0, "tasks.deadline": 0}).forEach(function(element) {
+                                        tasks = element.tasks;
+                                    }, function(err) {
+                                        db.close();
+                                        res.status(200).send(tasks);
+                                });
+                            });
+        });
+});
+
+/*
+*   CWM
 *   Queries the tasks collection for any task with the specified task_id.
 *   Uses the deleteOne mongodb method because only one task will have that task_id.
 *   Then returns the tasks still in the collection.
 */
 app.route('/tasklist/deletetask').get((req, res) => {
-    let del = {task_id: req.query.task_id};
+    let delTask = {task_id: req.query.task_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('tasks');
-        collection.deleteOne(del, function(err, obj) {
+        collection.deleteOne(delTask, function(err, obj) {
             if (err) throw err;
             console.log("Task Deleted");
             collection.find({}).toArray(function(err, result) {
                 if (err) throw err;
-                db.close();
                 tasks = result;
                 res.status(200).send(tasks);
             });
         });
+        var collection2 = db.db().collection('batches');
+        collection2.updateMany({}, {$pull: {"tasks": {task_id: req.query.task_id}}});//Deletes task from all batches tasks array
+        //db.close();
     });
 });
 

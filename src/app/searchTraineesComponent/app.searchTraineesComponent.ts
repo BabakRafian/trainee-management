@@ -1,9 +1,16 @@
+/*
+* CWM
+* Search Trainees Component
+* Shows page with all trainees listed in a scrollable box. Can search
+* these trainees based on their trainee_id, their email, or a combination
+* of their first names, last names, and batch Id's
+*/
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { TraineeService } from '../services/TraineeService';
 import { Trainee } from '../models/trainee';
 
 @Component({
-  selector: 'app-root',
+  selector: 'search-trainees',
   templateUrl: './app.searchTraineesComponent.html',
   styleUrls: ['./app.searchTraineesComponent.css'],
   providers: [ TraineeService ]
