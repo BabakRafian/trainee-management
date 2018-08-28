@@ -1,18 +1,22 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { TaskService } from '../services/TaskService';
+import { TraineeService } from '../services/TraineeService';
 import { Task } from '../models/task';
 import { Assigned_Task } from '../models/assignedTask';
+import { Trainee } from '../models/trainee';
+
 
 @Component({
   selector: 'app-root',
-  templateUrl: './task-component.component.html',
-  styleUrls: ['./task-component.component.css'],
-  providers: [ TaskService ]
+  templateUrl: './view-batch-component.component.html',
+  styleUrls: ['./view-batch-component.component.css'],
+  providers: [ TaskService, TraineeService ]
 })
-export class AppTaskComponent implements OnInit {
-  title = 'Add Tasks';
+export class ViewBatchComponent implements OnInit {
+  title = 'View Batch';
   tasks: Task[];
   assigned_tasks: Assigned_Task[];
+  trainees: Trainee[];
 
   @ViewChild('taskId') taskId: ElementRef;
   @ViewChild('courseId') courseId: ElementRef;
@@ -20,14 +24,25 @@ export class AppTaskComponent implements OnInit {
   @ViewChild('deadline') deadline: ElementRef;
   @ViewChild('taskDescription') taskDescription: ElementRef;
 
-  constructor(private _taskService: TaskService) {}
+  constructor(private _taskService: TaskService, private _traineeService: TraineeService) {}
 
   /*
   * ngOnInit executes when the page is loaded. 
   */
   ngOnInit() {
     this.getTasks();
+    this.getTrainees();
     // this.getAssignedTasks();
+  }
+
+  /*
+  * Go ahead and load a list of all current trainees in all batches on starting the page
+  */
+  getTrainees(): void {
+    this._traineeService.getAllTrainees()
+      .subscribe(emps => {
+        this.trainees = emps as Trainee[]
+    });
   }
 
   /*
@@ -83,4 +98,17 @@ export class AppTaskComponent implements OnInit {
     //   this.assigned_tasks = tsks as Assigned_Task[]
     // });
   }
+
+  /*
+  * Activated by the red X to the left of the trainee's name on the list. Sends the trainee_id
+  * of the trainee to be deleted to the service class. trainee_id is a unique identifier so no 
+  * need to send any other info about the trainee
+  */
+  deleteTrainee(_id: string): void {
+    this._traineeService.deleteTrainee(_id)
+    .subscribe(emps => {
+      this.trainees = emps as Trainee[]
+    });
+  }
 }
+
