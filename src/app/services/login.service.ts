@@ -31,7 +31,7 @@ export class LoginService {
       cb(response > 0); // =========> check this part out (BABAK)
       if(response){
         console.log('User is authenticated');
-        this.router.navigate(['searchTrainee']);
+        this.router.navigate(['viewBatch']);
         //this.messageService.add('The respose from server is: ' + response);
         //this.messageService.add('User is authenticated');
       }else{
