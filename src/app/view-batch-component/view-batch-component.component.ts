@@ -46,7 +46,7 @@ export class ViewBatchComponent implements OnInit {
   * Go ahead and load a list of all current trainees in all batches on starting the page
   */
   getTrainees(): void {
-    this._traineeService.getAllTrainees()
+    this._traineeService.getBatchTrainees(this.batchIdText)
       .subscribe(emps => {
         this.trainees = emps as Trainee[]
     });
@@ -99,6 +99,7 @@ export class ViewBatchComponent implements OnInit {
     this._traineeService.deleteTrainee(_id)
     .subscribe(emps => {
       this.trainees = emps as Trainee[]
+      this.getTrainees();//BAD BAD THIS IS BAD. We have to separate out a few more methods. There should be different method for deleting from this view than the trainee list view on the service
     });
   }
 }

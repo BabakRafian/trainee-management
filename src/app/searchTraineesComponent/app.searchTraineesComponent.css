@@ -35,6 +35,7 @@ li {
 	width: 110%;
 	font-size: medium;
 	margin-left: -8%;
+	/*text-align: right;*/
 }
 
 input {
