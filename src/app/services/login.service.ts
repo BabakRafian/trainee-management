@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Credentials } from '../models/credentials';
+import {Router} from '@angular/router';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,8 @@ export class LoginService {
   };
 
   private loginUrl = 'http://localhost:8080/login';  // URL to web api
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient, private router: Router, private messageService: MessageService) { }
 
   validateUser(credentials: Credentials, cb:(status: any)=>any){
     //this.messageService.clear();
@@ -28,10 +31,12 @@ export class LoginService {
       cb(response > 0); // =========> check this part out (BABAK)
       if(response){
         console.log('User is authenticated');
+        this.router.navigate(['viewBatch']);
         //this.messageService.add('The respose from server is: ' + response);
         //this.messageService.add('User is authenticated');
       }else{
         console.log('User is NOT authenticated');
+        this.messageService.add('Either Username or password is not correct! Try again');
         //this.messageService.add('User is NOT authenticated');
         //this.messageService.add('The response from server is: ' + response);
         //this.userAccess = "User is not permitted";
