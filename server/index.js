@@ -33,6 +33,25 @@ app.route('/traineelist').get((req, res) => {
 
 /*
 *   CWM
+*   Returns the full list of trainees in the collection. This will be called when the page 
+*   initially loads.
+*/
+app.route('/traineelist/batch').get((req, res) => {
+    let batch_id = req.query.batch_id;
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('trainees');
+        if( err ) console.log("Unable connect to database");
+        collection.find({"batch_id": batch_id}).toArray(function(err, result) {
+            if (err) throw err;
+            db.close();
+            trainees = result;
+            res.status(200).send(trainees);
+        });
+    });
+});
+
+/*
+*   CWM
 *   This code will need to be "re-routed" or changed altogether since there is no longer
 *   any functionality for adding a trainee from the traineelist page (search trainee page).
 *   Most likely the best bet will be to send a whole json array of trainees (when a batch is 
