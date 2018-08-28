@@ -26,6 +26,19 @@ app.use(express.json());
 //     city_preferences: [city_pref],
 //     domain_preferences: ["Full-Stack"]
 // }
+<<<<<<< HEAD
+// // db.getAllRecordsFrom('batches',(body: any[])=>{
+// //     //console.log(body[0]);
+// // });
+
+// // db.getAllRecordsFrom('trainees',(body: any[])=>{
+// //     console.log(body[0]);
+// // });
+
+// db.addNewDocument(tr1,(body:any[])=>{
+//     console.log(body);
+// });
+=======
 // db.getAllRecordsFrom('batches',(body: any[])=>{
 //     //console.log(body[0]);
 // });
@@ -41,3 +54,4 @@ app.use(express.json());
 //         console.log(body);
 //     });
 // });
+>>>>>>> 94b97e9a7e8e4aaae36b540582c0e9baeaae07b2

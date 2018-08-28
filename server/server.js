@@ -24,13 +24,6 @@ function isValid(username, pass, cb) {
         console.log(temp);
         cb(temp);
     });
-    // console.log(username + ' ' + pass);
-    // if (username === "babak" && pass == 4070) {
-    //     return true;
-    // }
-    // else {
-    //     return false;
-    // }
 }
 /**
  * handles login requests
@@ -39,9 +32,8 @@ app.post('/login', function (request, response) {
     console.log("Hello from post");
     console.log(request.body);
     isValid(request.body.username, request.body.password, function (res) {
-        //var res = [{ status: true }, { status: false }];
         if (res) {
-            console.log('I am true');
+            //console.log('I am true');
             response.status(200).send({ status: true });
         }
         else {
