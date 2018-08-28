@@ -16,7 +16,7 @@ export class LoginService {
   private loginUrl = 'http://localhost:8080/login';  // URL to web api
   constructor(private http: HttpClient) { }
 
-  validateUser(credentials: Credentials){
+  validateUser(credentials: Credentials, cb:(status: any)=>any){
     //this.messageService.clear();
     let message = {username: credentials.username, password: credentials.password}
     console.log('connecting to server...');
@@ -25,6 +25,7 @@ export class LoginService {
     .subscribe(res=>{
       console.log(res.status);
       let response = res.status;
+      cb(response > 0); // =========> check this part out (BABAK)
       if(response){
         console.log('User is authenticated');
         //this.messageService.add('The respose from server is: ' + response);

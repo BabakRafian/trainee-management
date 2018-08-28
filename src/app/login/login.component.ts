@@ -9,6 +9,8 @@ import {LoginService} from '../services/login.service';
 })
 export class LoginComponent implements OnInit {
 
+  authenticated: boolean = false;
+
   credentials: Credentials = {
     username: '',
     password: ''
@@ -26,7 +28,9 @@ export class LoginComponent implements OnInit {
     //this.messageService.add(this.test);
     //this.messageService.add('username: '+ selectedUser.username);
     //this.messageService.add('pass: '+ selectedUser.pass);
-    this.loginService.validateUser(passedCredentials);   
+    this.loginService.validateUser(passedCredentials, (res:boolean)=>{
+        this.authenticated = res;
+    });   
   }
 
 }

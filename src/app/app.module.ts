@@ -6,12 +6,14 @@ import { AppTaskComponent } from './task-component/task-component.component';
 import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './/app-routing.module'; 
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
     AppSearchTraineesComponent,
     AppTaskComponent,
     LoginComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -20,6 +22,6 @@ import { AppRoutingModule } from './/app-routing.module';
     AppRoutingModule,
   ],
   providers: [],
-  bootstrap: [LoginComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
