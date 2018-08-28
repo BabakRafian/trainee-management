@@ -1,3 +1,10 @@
+/*
+* CWM
+* Trainee Service
+* Handles methods associated with trainees. Handles delete trainees from View Batch,
+* delete trainees from Search Trainees, possibly more depending on how create batch
+* is implemented down the line. 
+*/
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
