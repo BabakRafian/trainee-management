@@ -6,8 +6,8 @@ var db = new dbUtility_1.DBUtility();
 var tr1 = {
     trainee_id: "234",
     email: "test@na.com",
-    firstname: "Heli",
-    lastname: "meli",
+    first_name: "Heli",
+    last_name: "meli",
     batch_id: "1",
     password: "1234",
     city_preferences: ["newJersy"],

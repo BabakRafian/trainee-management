@@ -67,7 +67,7 @@ export class ViewBatchComponent implements OnInit {
   * which ones are being used for the query on the back-end
   */
   addTask(taskId: string, courseId: string, deadline: string, desc: string): void {
-    this._taskService.addTask(taskId, courseId, this.batchIdText, deadline, desc)
+    this._taskService.addBatchTask(taskId, courseId, this.batchIdText, deadline, desc)
     .subscribe(tsks => {
        this.tasks = tsks as Task[];
      });//batchIdText supplied by session
@@ -83,7 +83,7 @@ export class ViewBatchComponent implements OnInit {
   * need to send any other info about the trainee
   */
   deleteTask(_id: string): void {
-    this._taskService.deleteTask(_id)
+    this._taskService.deleteBatchTask(_id, this.batchIdText)
     .subscribe(tsks => {
       this.tasks = tsks as Task[]
       this.getBatchTasks();//Populate box with only this batch's tasks. Probably should separate delete/add tasks for batches/general

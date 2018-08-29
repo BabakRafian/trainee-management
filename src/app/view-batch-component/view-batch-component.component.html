@@ -32,7 +32,7 @@
       <ul *ngFor="let trainee of trainees"> <!--Iterate through trainees array in component code-->
         <li class="list-group-item">
           <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteTrainee(trainee)">X</button>
-          {{trainee.trainee_id}}: {{trainee.firstname}} {{trainee.lastname}} ({{trainee.batch_id}})
+          {{trainee.trainee_id}}: {{trainee.first_name}} {{trainee.last_name}} ({{trainee.batch_id}})
         </li>
       </ul>
     </div>

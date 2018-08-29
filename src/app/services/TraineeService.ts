@@ -25,7 +25,7 @@ export class TraineeService {
   }
 
   getTraineeByAll(traineeID: string, email: string, first: string, last: string, batchID: string): Observable<Trainee[]> {
-      return this.http.get<Trainee[]>('http://localhost:3000/traineelist/search', { params: {trainee_id: traineeID, email: email, firstname: first, lastname: last, batch_id: batchID}});
+      return this.http.get<Trainee[]>('http://localhost:3000/traineelist/search', { params: {trainee_id: traineeID, email: email, first_name: first, last_name: last, batch_id: batchID}});
   }
 
   addTrainee(trainee_id: string, email: string, first: string, last: string, batch_id: string): Observable<Trainee[]> {

@@ -33,19 +33,18 @@ app.route('/traineelist').get((req, res) => {
 
 /*
 *   CWM
-*   Returns the full list of trainees in the collection. This will be called when the page 
+*   Returns the full list of trainees in the batch specified. This will be called when the page 
 *   initially loads.
 */
 app.route('/traineelist/batch').get((req, res) => {
-    let batch_id = req.query.batch_id;
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
-        var collection = db.db().collection('trainees');
+        var collection = db.db().collection('batches');
         if( err ) console.log("Unable connect to database");
-        collection.find({"batch_id": batch_id}).toArray(function(err, result) {
-            if (err) throw err;
-            db.close();
-            trainees = result;
-            res.status(200).send(trainees);
+        collection.find({"batch_id": req.query.batch_id}, {"trainees": 1, "_id": 0}).forEach(function(element) {
+                trainees = element.trainees;
+            }, function(err) {
+                db.close();
+                res.status(200).send(trainees);
         });
     });
 });
@@ -58,21 +57,21 @@ app.route('/traineelist/batch').get((req, res) => {
 *   created) and to use the insertMany mongodb method to add all of the trainees at once to 
 *   the trainee collection
 */
-app.route('/traineelist/add').get((req, res) => {
-    let newEmp = {trainee_id: req.query.trainee_id, email: req.query.email, firstname: req.query.first, lastname: req.query.last, batch_id: req.query.batch_id};
-    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
-        var collection = db.db().collection('trainees');
-        collection.insertOne(newEmp, function(err, obj) {
-            if( err ) console.log("Unable to add trainee");
-            collection.find({}).toArray(function(err, result) {
-                if (err) throw err;
-                db.close();
-                trainees = result;
-                res.status(200).send(trainees);
-            });
-        });
-    });
-});
+// app.route('/traineelist/add').get((req, res) => {
+//     let newEmp = {trainee_id: req.query.trainee_id, email: req.query.email, first_name: req.query.first, last_name: req.query.last, batch_id: req.query.batch_id};
+//     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+//         var collection = db.db().collection('trainees');
+//         collection.insertOne(newEmp, function(err, obj) {
+//             if( err ) console.log("Unable to add trainee");
+//             collection.find({}).toArray(function(err, result) {
+//                 if (err) throw err;
+//                 db.close();
+//                 trainees = result;
+//                 res.status(200).send(trainees);
+//             });
+//         });
+//     });
+// });
 
 /*
 *   CWM
@@ -83,8 +82,9 @@ app.route('/traineelist/add').get((req, res) => {
 app.route('/traineelist/delete').get((req, res) => {
     let em = {trainee_id: req.query.trainee_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
-        var collection2 = db.db().collection('batches');
-        collection2.updateOne({"batch_id": req.query.batch_id}, {$pull: {"trainees": {trainee_id: req.query.trainee_id}}});
+        var batchesCollection = db.db().collection('batches');
+        //$pull gets rid of the element in the specified array by the trainee_id specified
+        batchesCollection.updateOne({"batch_id": req.query.batch_id}, {$pull: {"trainees": {trainee_id: req.query.trainee_id}}});
         var collection = db.db().collection('trainees');
         collection.deleteOne(em, function(err, obj) {
             if (err) throw err;
@@ -112,13 +112,13 @@ app.route('/traineelist/batch/delete').get((req, res) => {
             if (err) throw err;
             console.log("Trainee Deleted");
         });
-        var collection2 = db.db().collection('batches');
-        collection2.updateOne({"batch_id": req.query.batch_id}, {$pull: {"trainees": {trainee_id: req.query.trainee_id}}},
+        var batchesCollection = db.db().collection('batches');
+        batchesCollection.updateOne({"batch_id": req.query.batch_id}, {$pull: {"trainees": {trainee_id: req.query.trainee_id}}},
                                 function(err, obj) {
-                                    collection2.find({"batch_id": req.query.batch_id}, {"trainees": 1, "_id": 0}).forEach(function(element) {
+                                    batchesCollection.find({"batch_id": req.query.batch_id}, {"trainees": 1, "_id": 0}).forEach(function(element) {
                                         trainees = element.trainees;
                                         console.log(trainees);
-                                        res.status(200).send(trainees);
+                                        res.status(200).send(trainees);//Sends back trainees specific to that batch being viewed
                                     });
                                 });
     });
@@ -128,7 +128,7 @@ app.route('/traineelist/batch/delete').get((req, res) => {
 *   CWM
 *   This query will return the trainee based on all of the fields being specified, just
 *   the trainee_id or email fields being specified (which will be unique), or if the search
-*   include the firstname, lastname, and batch_id fields. We do not want to include a general search
+*   include the first_name, last_name, and batch_id fields. We do not want to include a general search
 *   for batch_id to match on because then if the trainee_id field was given a value and the batch_id field
 *   was given a value, it would still return everyone in that batch even though they would have different
 *   trainee ID's
@@ -136,11 +136,11 @@ app.route('/traineelist/batch/delete').get((req, res) => {
 app.route('/traineelist/search').get((req, res) => {
     let t_id = req.query.trainee_id;
     let em = req.query.email;
-    let first = req.query.firstname;
-    let last = req.query.lastname;
+    let first = req.query.first_name;
+    let last = req.query.last_name;
     let b_id = req.query.batch_id;
-    let query = {"$or": [{"trainee_id": t_id, "email": em, "firstname": first, "lastname": last, "batch_id": b_id},
-                        {"trainee_id": t_id}, {"email": em}, {"$and": [{"firstname": first}, {"lastname": last}, {"batch_id": b_id}]}]};
+    let query = {"$or": [{"trainee_id": t_id, "email": em, "first_name": first, "last_name": last, "batch_id": b_id},
+                        {"trainee_id": t_id}, {"email": em}, {"$and": [{"first_name": first}, {"last_name": last}, {"batch_id": b_id}]}]};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('trainees');
         if( err ) console.log("Unable connect to database");
@@ -165,7 +165,7 @@ app.route('/tasklist').get((req, res) => {
             if (err) throw err;
             db.close();
             tasks = result;
-            res.status(200).send(tasks);
+            res.status(200).send(tasks);//Sends back all tasks in the general tasks collection
         });
     });
 });
@@ -178,12 +178,37 @@ app.route('/tasklist/batch').get((req, res) => {
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('batches');
         if( err ) console.log("Unable connect to database");
-        var cursor = collection.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0}).forEach(function(element) {
+        collection.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0}).forEach(function(element) {
                 tasks = element.tasks;
             }, function(err) {
                 db.close();
-                res.status(200).send(tasks);
+                res.status(200).send(tasks);//Sends back all tasks specific to the batch being viewed
         });
+    });
+});
+
+app.route('/tasklist/addtask').get((req, res) => {
+    let newTask = {"task_id": req.query.task_id, "course_id": req.query.course_id, "task_description": req.query.task_description};
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var batchesCollection = db.db().collection('batches');
+        batchesCollection.updateOne({batch_id: req.query.batch_id}, 
+                            {$push: //Push is the mongodb command to add an object to an array
+                                {tasks: 
+                                    {task_id: req.query.task_id,
+                                    course_id: req.query.course_id,
+                                    task_description: req.query.task_description, 
+                                    deadline: req.query.deadline}}});
+        var collection = db.db().collection('tasks');
+        collection.insertOne(newTask, function(err, obj) {
+            if( err ) console.log("Unable to add task");
+            collection.find({}).toArray(function(err, result) {
+                if (err) throw err;
+                db.close();
+                tasks = result;
+                res.status(200).send(tasks);//Sends back all tasks for the general view tasks page
+            });
+        });
+        
     });
 });
 
@@ -192,7 +217,7 @@ app.route('/tasklist/batch').get((req, res) => {
 *   First adds a task to the tasks collection. Then it goes into the batches collection and updates the proper batch document
 *   by pushing the new assigned task onto it. Each of these entries into the assigned_tasks array will have a task object and a deadline
 */
-app.route('/tasklist/addtask').get((req, res) => {
+app.route('/tasklist/batch/addtask').get((req, res) => {
     let newTask = {"task_id": req.query.task_id, "course_id": req.query.course_id, "task_description": req.query.task_description};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('tasks');
@@ -213,7 +238,7 @@ app.route('/tasklist/addtask').get((req, res) => {
                                         tasks = element.tasks;
                                     }, function(err) {
                                         db.close();
-                                        res.status(200).send(tasks);
+                                        res.status(200).send(tasks);//Sends back tasks specific to batch
                                 });
                             });
         });
@@ -228,19 +253,41 @@ app.route('/tasklist/addtask').get((req, res) => {
 app.route('/tasklist/deletetask').get((req, res) => {
     let delTask = {task_id: req.query.task_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var batchesCollection = db.db().collection('batches');
+        batchesCollection.updateMany({}, {$pull: {"tasks": {task_id: req.query.task_id}}});//Deletes task from all batches tasks array
         var collection = db.db().collection('tasks');
         collection.deleteOne(delTask, function(err, obj) {
             if (err) throw err;
             console.log("Task Deleted");
             collection.find({}).toArray(function(err, result) {
                 if (err) throw err;
+                db.close();
                 tasks = result;
-                res.status(200).send(tasks);
+                res.status(200).send(tasks);//This sends back all of the tasks for the general tasks page
             });
         });
-        var collection2 = db.db().collection('batches');
-        collection2.updateMany({}, {$pull: {"tasks": {task_id: req.query.task_id}}});//Deletes task from all batches tasks array
-        //db.close();
+    });
+});
+
+app.route('/tasklist/batch/deletetask').get((req, res) => {
+    let delTask = {task_id: req.query.task_id};
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('tasks');
+        collection.deleteOne(delTask, function(err, obj) {
+            if (err) throw err;
+            console.log("Task Deleted");
+        });
+        var batchesCollection = db.db().collection('batches');
+        batchesCollection.updateMany({}, {$pull: {"tasks": {task_id: req.query.task_id}}},
+                                        function(err, obj) {
+                                            if( err ) console.log("Unable to add task");
+                                            batchesCollection.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0, "tasks.deadline": 0}).forEach(function(element) {
+                                                    tasks = element.tasks;
+                                                }, function(err) {
+                                                    db.close();
+                                                    res.status(200).send(tasks);//This sends back the tasks for the specific batch
+                                            });
+                                        });
     });
 });
 
