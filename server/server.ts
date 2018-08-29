@@ -3,19 +3,22 @@ var app = express();
 var cors = require('cors');
 var bodyParser = require('body-parser');
 import { DBUtility } from './dbUtility';
+var MongoClient = require('mongodb').MongoClient;
+var dbUrl = 'mongodb://localhost:27017/trainee-management';
 
 app.use(cors());
 app.options('*', cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.listen(8080);
 app.use(express.json());
+console.log('listening to localhost://8080');
 
 /**
  * Validates the user
  * @param username
  * @param pass
  */
-function isValid(username, pass, cb:(res: any)=>any) {
+function isValid_old(username, pass, cb:(res: any)=>any) {
     let db = new DBUtility();
     let query = '{"trainee_id" : "'+username+'", "password": "'+pass+'"}';
     console.log(query);
@@ -26,6 +29,24 @@ function isValid(username, pass, cb:(res: any)=>any) {
         cb(temp);
     });
 }
+/**
+ * Validates the user
+ * @param username
+ * @param pass
+ */
+function isValid(username, pass, cb:(res: any)=>any) {
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        if( err ) console.log("Unable connect to database");
+        var myCursor = db.db().collection('trainees');
+        myCursor.find( { "trainee_id": username, "password":pass } ).toArray(function(err, result) {
+            if (err) throw err;
+            db.close();
+            console.log(result);
+            cb(result.length>0);
+        });
+    });
+}
+
 /**
  * handles login requests
  */
