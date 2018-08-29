@@ -1,4 +1,5 @@
 <!--CWM: HTML View for searching trainees -->
+<app-admin-header title="Search Trainees"></app-admin-header>
 <div class="row">
   <h3 class="text-center">Search Trainee List</h3>
   <div class="col-lg-4 form-group"> 
@@ -15,7 +16,7 @@
       <ul *ngFor="let trainee of trainees"> <!--Iterate through trainees array in component code-->
         <li class="list-group-item">
           <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteTrainee(trainee.trainee_id)">X</button>
-          {{trainee.trainee_id}}: {{trainee.firstname}} {{trainee.lastname}} ({{trainee.batch_id}})
+          Trainee ID: {{trainee.trainee_id}} | Name: {{trainee.firstname}} {{trainee.lastname}} | Batch: {{trainee.batch_id}}
         </li>
       </ul>
     </div>

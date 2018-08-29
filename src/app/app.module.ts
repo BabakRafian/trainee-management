@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './/app-routing.module'; 
 import { AppComponent } from './app.component';
+import { AdminHeaderComponent } from './admin-header/admin-header.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { AppComponent } from './app.component';
     AppTaskComponent,
     ViewBatchComponent,
     LoginComponent,
-    AppComponent
+    AppComponent,
+    AdminHeaderComponent
   ],
   imports: [
     BrowserModule,

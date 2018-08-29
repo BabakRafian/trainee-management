@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import {AppSearchTraineesComponent} from './searchTraineesComponent/app.searchTraineesComponent';
+import { AppSearchTraineesComponent } from './searchTraineesComponent/app.searchTraineesComponent';
 import { AppTaskComponent } from './task-component/task-component.component';
 import { ViewBatchComponent } from './view-batch-component/view-batch-component.component';
 
