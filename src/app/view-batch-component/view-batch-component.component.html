@@ -1,24 +1,38 @@
-<!--CWM: view for general tasks page-->
-<app-admin-header title="Task View"></app-admin-header>
+<!--CWM: View batch component html page -->
+<app-admin-header title="View Batch"></app-admin-header>
+<div class="row">
+  <div class="col-lg-4">
+    <p id="batchIdText">Batch ID: {{batchIdText}}</p>
+  </div>
+</div>
 <div class="row">
   <h3 class="text-center">Add Task</h3>
   <div class="col-lg-4 form-group"> 
     <input type="text" class="form-control" id="taskId" #taskId placeholder="Task ID">
     <input type="text" class="form-control" id="courseId" #courseId placeholder="Course ID">
-    <input type="text" class="form-control" id="batchId" #batchId placeholder="Batch ID">
     <input type="date" class="form-control" id="deadline" #deadline>
     <div class="md-form">
       <textarea type="text" id="taskDescription" #taskDescription class="md-textarea form-control" mdbInputDirective></textarea>
       <label for="taskDescription">Task Description</label>
     </div>
-    <button type="button" id="AddTask" class="btn btn-default custom" (click)="addTask(taskId.value, courseId.value, batchId.value, deadline.value, taskDescription.value)">Add Task</button>
+    <button type="button" id="AddTask" class="btn btn-default custom" (click)="addTask(taskId.value, courseId.value, deadline.value, taskDescription.value)">Add Task</button>
   </div>
   <div class="panel panel-primary col-lg-4">
     <div class="panel-body list-group">
       <ul *ngFor="let task of tasks"> <!--Iterate through tasks array in component code-->
         <li class="list-group-item">
           <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteTask(task.task_id)">X</button>
-          Task ID: {{task.task_id}} | Course ID: {{task.course_id}} | Description: {{task.task_description}}
+          {{task.task_id}}: ({{task.course_id}}) {{task.task_description}}
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel panel-primary col-lg-4">
+    <div class="panel-body list-group">
+      <ul *ngFor="let trainee of trainees"> <!--Iterate through trainees array in component code-->
+        <li class="list-group-item">
+          <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteTrainee(trainee)">X</button>
+          {{trainee.trainee_id}}: {{trainee.first_name}} {{trainee.last_name}} ({{trainee.batch_id}})
         </li>
       </ul>
     </div>

@@ -1,3 +1,10 @@
+/*
+* CWM
+* Task Service
+* This service handles methods related to tasks and forwards them to the server
+* code where it is then handled by the back end. Receives calls from View Batch
+* Component and the Task Component
+*/
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -14,23 +21,23 @@ export class TaskService {
     return this.http.get<Task[]>('http://localhost:3000/tasklist');
   }
 
-  // getAssignedTasks(): Observable<Assigned_Task[]> {
-  //     return this.http.get<Trainee[]>('http://localhost:3000/assignedtasklist');
-  // }
-
-  addTask(t_id: string, c_id: string, t_desc: string): Observable<Task[]> {
-      return this.http.get<Task[]>('http://localhost:3000/tasklist/addtask', { params: {task_id: t_id, course_id: c_id, task_description: t_desc}});
+  getBatchTasks(batchText: string) {
+      return this.http.get<Task[]>('http://localhost:3000/tasklist/batch', {params: {batch_id: batchText}});
   }
 
-  // addAssignedTask(tsk: Task, b_id: string, dedlne: Date): Observable<Assigned_Task[]> {
-  //     return this.http.get<Trainee[]>('http://localhost:3000/traineelist/addassignedtask', { params: {trainee_id: trainee_id, email: email, first: first, last: last, batch_id: batch_id}});
-  // }
+  addTask(t_id: string, c_id: string, b_id: string, deadline: string, t_desc: string): Observable<Task[]> {
+      return this.http.get<Task[]>('http://localhost:3000/tasklist/addtask', { params: {task_id: t_id, course_id: c_id, batch_id: b_id, deadline: deadline, task_description: t_desc}});
+  }
+
+  addBatchTask(t_id: string, c_id: string, b_id: string, deadline: string, t_desc: string): Observable<Task[]> {
+      return this.http.get<Task[]>('http://localhost:3000/tasklist/batch/addtask', { params: {task_id: t_id, course_id: c_id, batch_id: b_id, deadline: deadline, task_description: t_desc}});
+  }
 
   deleteTask(_id: string): Observable<Task[]> {
       return this.http.get<Task[]>('http://localhost:3000/tasklist/deletetask', { params: {task_id: _id}});
   }
 
-  // deleteAssignedTask(_id: string): Observable<Assigned_Task[]> {
-  //     return this.http.get<Trainee[]>('http://localhost:3000/traineelist/deleteassignedtask', { params: {trainee_id: _id}});
-  // }
+  deleteBatchTask(_id: string, b_id: string): Observable<Task[]> {
+      return this.http.get<Task[]>('http://localhost:3000/tasklist/batch/deletetask', { params: {task_id: _id, batch_id: b_id}});
+  }
 }

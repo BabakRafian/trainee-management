@@ -1,0 +1,30 @@
+<app-admin-header title="Trainee Management Login"></app-admin-header>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6 jumbotron"  style="text-align:center; background-color:rgb(211, 211, 211);">
+      <div *ngIf="messageService.messages.length">
+          <div class="text-danger" *ngFor='let message of messageService.messages'> {{message}} </div>
+      </div>
+    <nav><a routerLink="/searchTrainee">home</a></nav>
+    <h2 class="text-primary">
+      login
+    </h2>
+    <div class="form-group"> 
+      <!--<label for="usr" class="text-dark">Username:-->
+        <!-- -->
+      <input type="text" [(ngModel)]="credentials.username" class="form-control form-control-lg"  placeholder="username">
+    <!--</label>-->
+    </div>
+  <div class="form-group"> 
+    <!--<label for="pwd">Password:-->
+      <!---->
+      <input type="text" [(ngModel)]="credentials.password" class="form-control form-control-lg"  placeholder="pass">
+    <!--</label>-->
+  </div>
+  <!--[class.selected]="user === selectedUser" <a*ngIf="this.authenticated" routerLink="/searchTrainee">-->
+  
+  <button type="button" class="btn btn-outline-primary btn-lg"(click)="onSelect(credentials)"> Login</button>
+  </div>
+  <div class="col-sm-3"></div>
+  
+</div>

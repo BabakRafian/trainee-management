@@ -1,9 +1,16 @@
+/*
+* CWM
+* Search Trainees Component
+* Shows page with all trainees listed in a scrollable box. Can search
+* these trainees based on their trainee_id, their email, or a combination
+* of their first names, last names, and batch Id's
+*/
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { TraineeService } from '../services/TraineeService';
 import { Trainee } from '../models/trainee';
 
 @Component({
-  selector: 'app-root',
+  selector: 'search-trainees',
   templateUrl: './app.searchTraineesComponent.html',
   styleUrls: ['./app.searchTraineesComponent.css'],
   providers: [ TraineeService ]
@@ -70,8 +77,8 @@ export class AppSearchTraineesComponent implements OnInit {
   * of the trainee to be deleted to the service class. trainee_id is a unique identifier so no 
   * need to send any other info about the trainee
   */
-  deleteTrainee(_id: string): void {
-    this._traineeService.deleteTrainee(_id)
+  deleteTrainee(trainee: Trainee): void {
+    this._traineeService.deleteTrainee(trainee.trainee_id, trainee.batch_id)
     .subscribe(emps => {
       this.trainees = emps as Trainee[]
     });

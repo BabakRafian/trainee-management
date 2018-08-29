@@ -3,19 +3,14 @@ exports.__esModule = true;
 var dbUtility_1 = require("./dbUtility");
 //var DBUtility = require('./dbUtility');
 var db = new dbUtility_1.DBUtility();
-var collectionName = 'trainees';
-var city_pref = {
-    state: "New York",
-    city: "New Jersey"
-};
 var tr1 = {
-    trainee_id: 234,
+    trainee_id: "234",
     email: "test@na.com",
     first_name: "Heli",
     last_name: "meli",
     batch_id: "1",
     password: "1234",
-    city_preferences: [city_pref],
+    city_preferences: ["newJersy"],
     domain_preferences: ["Full-Stack"]
 };
 // db.getAllRecordsFrom('batches',(body: any[])=>{
@@ -24,6 +19,6 @@ var tr1 = {
 // db.getAllRecordsFrom('trainees',(body: any[])=>{
 //     console.log(body[0]);
 // });
-db.addNewDocument(collectionName, tr1, function (body) {
+db.addNewDocument(tr1, function (body) {
     console.log(body);
 });
