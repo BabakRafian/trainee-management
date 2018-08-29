@@ -172,7 +172,7 @@ app.route('/tasklist').get((req, res) => {
 
 /*
 *   CWM
-*   Queries the tasks collection for all of the tasks. Used when initially loading the page
+*   Queries the tasks collection for all of the tasks specific to a batch
 */
 app.route('/tasklist/batch').get((req, res) => {
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
@@ -187,6 +187,11 @@ app.route('/tasklist/batch').get((req, res) => {
     });
 });
 
+/*
+*   CWM
+*   Mapped to from the general tasks page. Adds a task to the tasks collecton as well as 
+*   the specific batch if specified, but returns the general tasks to repopulate the tasks list
+*/
 app.route('/tasklist/addtask').get((req, res) => {
     let newTask = {"task_id": req.query.task_id, "course_id": req.query.course_id, "task_description": req.query.task_description};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
@@ -215,7 +220,8 @@ app.route('/tasklist/addtask').get((req, res) => {
 /*
 *   CWM
 *   First adds a task to the tasks collection. Then it goes into the batches collection and updates the proper batch document
-*   by pushing the new assigned task onto it. Each of these entries into the assigned_tasks array will have a task object and a deadline
+*   by pushing the new assigned task onto it. Returns the tasks specific to this batch to 
+*   repopulate the batch's tasks list
 */
 app.route('/tasklist/batch/addtask').get((req, res) => {
     let newTask = {"task_id": req.query.task_id, "course_id": req.query.course_id, "task_description": req.query.task_description};
@@ -224,8 +230,8 @@ app.route('/tasklist/batch/addtask').get((req, res) => {
         collection.insertOne(newTask, function(err, obj) {
             if( err ) console.log("Unable to add task");
         });
-        var collection2 = db.db().collection('batches');
-        collection2.updateOne({batch_id: req.query.batch_id}, 
+        var batchesCollection = db.db().collection('batches');
+        batchesCollection.updateOne({batch_id: req.query.batch_id}, 
                             {$push: //Push is the mongodb command to add an object to an array
                                 {tasks: 
                                     {task_id: req.query.task_id,
@@ -234,7 +240,7 @@ app.route('/tasklist/batch/addtask').get((req, res) => {
                                     deadline: req.query.deadline}}}, 
                             function(err, obj) {
                                 if( err ) console.log("Unable to add task");
-                                collection2.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0, "tasks.deadline": 0}).forEach(function(element) {
+                                batchesCollection.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0, "tasks.deadline": 0}).forEach(function(element) {
                                         tasks = element.tasks;
                                     }, function(err) {
                                         db.close();
@@ -269,6 +275,10 @@ app.route('/tasklist/deletetask').get((req, res) => {
     });
 });
 
+/*
+*   Deletes the task for the specific batch then returns that batches tasks to repopulate the 
+*   tasks list on the view batch page.
+*/
 app.route('/tasklist/batch/deletetask').get((req, res) => {
     let delTask = {task_id: req.query.task_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
@@ -278,7 +288,8 @@ app.route('/tasklist/batch/deletetask').get((req, res) => {
             console.log("Task Deleted");
         });
         var batchesCollection = db.db().collection('batches');
-        batchesCollection.updateMany({}, {$pull: {"tasks": {task_id: req.query.task_id}}},
+        //Only use updateOne and specify a batch to delete from. Deleting a task from the batch view should only delete it from that batch
+        batchesCollection.updateOne({"batch_id": req.query.batch_id}, {$pull: {"tasks": {task_id: req.query.task_id}}},
                                         function(err, obj) {
                                             if( err ) console.log("Unable to add task");
                                             batchesCollection.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0, "tasks.deadline": 0}).forEach(function(element) {
