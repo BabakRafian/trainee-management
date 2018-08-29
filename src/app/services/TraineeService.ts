@@ -32,7 +32,11 @@ export class TraineeService {
       return this.http.get<Trainee[]>('http://localhost:3000/traineelist/add', { params: {trainee_id: trainee_id, email: email, first: first, last: last, batch_id: batch_id}});
   }
 
-  deleteTrainee(_id: string) {
-      return this.http.get<Trainee[]>('http://localhost:3000/traineelist/delete', { params: {trainee_id: _id}});
+  deleteTrainee(_id: string, b_id: string) {
+      return this.http.get<Trainee[]>('http://localhost:3000/traineelist/delete', { params: {trainee_id: _id, batch_id: b_id}});
+  }
+
+  deleteBatchTrainee(_id: string, b_id: string) {
+      return this.http.get<Trainee[]>('http://localhost:3000/traineelist/batch/delete', { params: {trainee_id: _id, batch_id: b_id}});
   }
 }
