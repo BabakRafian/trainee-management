@@ -77,8 +77,8 @@ export class AppSearchTraineesComponent implements OnInit {
   * of the trainee to be deleted to the service class. trainee_id is a unique identifier so no 
   * need to send any other info about the trainee
   */
-  deleteTrainee(_id: string): void {
-    this._traineeService.deleteTrainee(_id)
+  deleteTrainee(trainee: Trainee): void {
+    this._traineeService.deleteTrainee(trainee.trainee_id, trainee.batch_id)
     .subscribe(emps => {
       this.trainees = emps as Trainee[]
     });

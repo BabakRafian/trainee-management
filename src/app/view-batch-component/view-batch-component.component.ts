@@ -67,7 +67,7 @@ export class ViewBatchComponent implements OnInit {
   * which ones are being used for the query on the back-end
   */
   addTask(taskId: string, courseId: string, deadline: string, desc: string): void {
-    this._taskService.addTask(taskId, courseId, this.batchIdText, deadline, desc)
+    this._taskService.addBatchTask(taskId, courseId, this.batchIdText, deadline, desc)
     .subscribe(tsks => {
        this.tasks = tsks as Task[];
      });//batchIdText supplied by session
@@ -83,7 +83,7 @@ export class ViewBatchComponent implements OnInit {
   * need to send any other info about the trainee
   */
   deleteTask(_id: string): void {
-    this._taskService.deleteTask(_id)
+    this._taskService.deleteBatchTask(_id, this.batchIdText)
     .subscribe(tsks => {
       this.tasks = tsks as Task[]
       this.getBatchTasks();//Populate box with only this batch's tasks. Probably should separate delete/add tasks for batches/general
@@ -95,11 +95,11 @@ export class ViewBatchComponent implements OnInit {
   * of the trainee to be deleted to the service class. trainee_id is a unique identifier so no 
   * need to send any other info about the trainee
   */
-  deleteTrainee(_id: string): void {
-    this._traineeService.deleteTrainee(_id)
+  deleteTrainee(trainee: Trainee): void {
+    this._traineeService.deleteBatchTrainee(trainee.trainee_id, trainee.batch_id)
     .subscribe(emps => {
       this.trainees = emps as Trainee[]
-      this.getTrainees();//BAD BAD THIS IS BAD. We have to separate out a few more methods. There should be different method for deleting from this view than the trainee list view on the service
+      //this.getTrainees();//BAD BAD THIS IS BAD. We have to separate out a few more methods. There should be different method for deleting from this view than the trainee list view on the service
     });
   }
 }

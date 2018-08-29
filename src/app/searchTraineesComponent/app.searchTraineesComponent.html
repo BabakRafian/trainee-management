@@ -15,8 +15,8 @@
     <div class="panel-body list-group">
       <ul *ngFor="let trainee of trainees"> <!--Iterate through trainees array in component code-->
         <li class="list-group-item">
-          <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteTrainee(trainee.trainee_id)">X</button>
-          Trainee ID: {{trainee.trainee_id}} | Name: {{trainee.firstname}} {{trainee.lastname}} | Batch: {{trainee.batch_id}}
+          <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteTrainee(trainee)">X</button>
+          Trainee ID: {{trainee.trainee_id}} | Name: {{trainee.first_name}} {{trainee.last_name}} | Batch: {{trainee.batch_id}}
         </li>
       </ul>
     </div>

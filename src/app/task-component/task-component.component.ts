@@ -54,7 +54,7 @@ export class AppTaskComponent implements OnInit {
     this._taskService.addTask(taskId, courseId, batchId, deadline, desc)
     .subscribe(tsks => {
         this.tasks = tsks as Task[]
-        this.getTasks();//Should seperate out the functionality of adding a general task and adding a task to a batch
+        //this.getTasks();//Should seperate out the functionality of adding a general task and adding a task to a batch
     });
     this.taskId.nativeElement.value='';
     this.courseId.nativeElement.value='';
