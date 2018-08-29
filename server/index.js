@@ -83,6 +83,8 @@ app.route('/traineelist/add').get((req, res) => {
 app.route('/traineelist/delete').get((req, res) => {
     let em = {trainee_id: req.query.trainee_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection2 = db.db().collection('batches');
+        collection2.updateOne({"batch_id": req.query.batch_id}, {$pull: {"trainees": {trainee_id: req.query.trainee_id}}});
         var collection = db.db().collection('trainees');
         collection.deleteOne(em, function(err, obj) {
             if (err) throw err;
@@ -94,6 +96,31 @@ app.route('/traineelist/delete').get((req, res) => {
                 res.status(200).send(trainees);
             });
         });
+    });
+});
+
+/*
+*   CWM
+*   Queries the trainee collection for any trainee with the specified trainee_id.
+*   Uses the deleteOne mongodb method because only one trainee will have that trainee_id.
+*   Then returns the trainees still in the collection.
+*/
+app.route('/traineelist/batch/delete').get((req, res) => {
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('trainees');
+        collection.deleteOne({"trainee_id": req.query.trainee_id}, function(err, obj) {
+            if (err) throw err;
+            console.log("Trainee Deleted");
+        });
+        var collection2 = db.db().collection('batches');
+        collection2.updateOne({"batch_id": req.query.batch_id}, {$pull: {"trainees": {trainee_id: req.query.trainee_id}}},
+                                function(err, obj) {
+                                    collection2.find({"batch_id": req.query.batch_id}, {"trainees": 1, "_id": 0}).forEach(function(element) {
+                                        trainees = element.trainees;
+                                        console.log(trainees);
+                                        res.status(200).send(trainees);
+                                    });
+                                });
     });
 });
 
@@ -182,7 +209,7 @@ app.route('/tasklist/addtask').get((req, res) => {
                                     deadline: req.query.deadline}}}, 
                             function(err, obj) {
                                 if( err ) console.log("Unable to add task");
-                                var cursor = collection2.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0, "tasks.deadline": 0}).forEach(function(element) {
+                                collection2.find({"batch_id": req.query.batch_id}, {"tasks": 1, "_id": 0, "tasks.deadline": 0}).forEach(function(element) {
                                         tasks = element.tasks;
                                     }, function(err) {
                                         db.close();
