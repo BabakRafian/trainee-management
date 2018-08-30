@@ -5,7 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { AppSearchTraineesComponent } from './searchTraineesComponent/app.searchTraineesComponent';
 import { AppTaskComponent } from './task-component/task-component.component';
 import { ViewBatchComponent } from './view-batch-component/view-batch-component.component';
-
+import { TraineeViewComponent } from './trainee-view/trainee-view.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
