@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { AppSearchTraineesComponent } from './searchTraineesComponent/app.searchTraineesComponent';
 import { AppTaskComponent } from './task-component/task-component.component';
 import { ViewBatchComponent } from './view-batch-component/view-batch-component.component';
+import { ViewTraineeComponent } from './view-trainee-component/view-trainee-component.component';
 
 
 const routes: Routes = [
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'searchTrainee', component: AppSearchTraineesComponent },
   { path: 'taskPage', component: AppTaskComponent },
   { path: 'viewBatch', component: ViewBatchComponent },
+  { path: 'viewTrainee/:trainee_id', component: ViewTraineeComponent},
 ];
 
 @NgModule({

@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './/app-routing.module'; 
 import { AppComponent } from './app.component';
 import { AdminHeaderComponent } from './admin-header/admin-header.component';
+import { ViewTraineeComponent } from './view-trainee-component/view-trainee-component.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { AdminHeaderComponent } from './admin-header/admin-header.component';
     ViewBatchComponent,
     LoginComponent,
     AppComponent,
-    AdminHeaderComponent
+    AdminHeaderComponent,
+    ViewTraineeComponent,
   ],
   imports: [
     BrowserModule,

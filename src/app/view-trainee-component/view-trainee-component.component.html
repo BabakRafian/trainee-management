@@ -1,0 +1,39 @@
+<!--CWM: view for view-trainee page-->
+<app-admin-header title="View Trainee"></app-admin-header>
+
+<div class="row">
+  <div class="col-lg-3">
+    <p id="traineeId">Trainee ID: {{trainee.trainee_id}}</p>
+    <p id="batchId">Batch ID: {{trainee.batch_id}}</p>
+  </div>
+  <div class="col-lg-3">
+    <p id="fullName">Name: {{trainee.first_name}} {{trainee.last_name}}</p>
+    <p id="email">Email: {{trainee.email}}</p>
+  </div>
+</div>
+<div class="row">
+  <h3 class="text-center">City Preferences</h3>
+  <div class="panel panel-primary col-lg-12">
+    <div class="panel-body list-group">
+      <ul *ngFor="let city of trainee.city_preferences"> 
+        <li class="list-group-item">
+          <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteCity(city)">X</button>
+          {{city.city}}, {{city.state}}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <h3 class="text-center">Domain Preferences</h3>
+  <div class="panel panel-primary col-lg-12">
+    <div class="panel-body list-group">
+      <ul *ngFor="let domain of trainee.domain_preferences"> <!--Iterate through domain_preferences array in component code-->
+        <li class="list-group-item">
+          <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteDomain(domain)">X</button>
+          {{domain}}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

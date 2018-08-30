@@ -155,6 +155,59 @@ app.route('/traineelist/search').get((req, res) => {
 
 /*
 *   CWM
+*   Returns one trainee from the trainees collection based on their trainee_id
+*/
+app.route('/trainee').get((req, res) => {
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('trainees');
+        if( err ) console.log("Unable connect to database");
+        collection.find({"trainee_id": req.query.trainee_id}).toArray(function(err, result) {
+            if (err) throw err;
+            db.close();
+            trainee = result[0];
+            res.status(200).send(trainee);
+        });
+    });
+});
+
+/*
+*   CWM
+*   Deletes a trainee's city preference from the trainees collection
+*/
+app.route('/trainee/deletecity').get((req, res) => {
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('trainees');
+        collection.updateOne({"trainee_id": req.query.trainee_id}, {$pull: {"city_preferences": {city: req.query.city, state: req.query.state}}},
+                                function(err, obj) {
+                                    collection.find({"trainee_id": req.query.trainee_id}, {"city_preferences": 1, "_id": 0}).forEach(function(element) {
+                                        cities = element.city_preferences;
+                                        console.log(cities);
+                                        res.status(200).send(cities);//Sends back trainees specific to that batch being viewed
+                                    });
+                                });
+    });
+});
+
+/*
+*   CWM
+*   Deletes a trainee's domain preference from the trainees collection, returns modified list
+*/
+app.route('/trainee/deletedomain').get((req, res) => {
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
+        var collection = db.db().collection('trainees');
+        collection.updateOne({"trainee_id": req.query.trainee_id}, {$pull: {"domain_preferences": req.query.domain}},
+                                function(err, obj) {
+                                    collection.find({"trainee_id": req.query.trainee_id}, {"domain_preferences": 1, "_id": 0}).forEach(function(element) {
+                                        domains = element.domain_preferences;
+                                        console.log(domains);
+                                        res.status(200).send(domains);//Sends back trainees specific to that batch being viewed
+                                    });
+                                });
+    });
+});
+
+/*
+*   CWM
 *   Queries the tasks collection for all of the tasks. Used when initially loading the page
 */
 app.route('/tasklist').get((req, res) => {
@@ -276,6 +329,7 @@ app.route('/tasklist/deletetask').get((req, res) => {
 });
 
 /*
+*   CWM
 *   Deletes the task for the specific batch then returns that batches tasks to repopulate the 
 *   tasks list on the view batch page.
 */
