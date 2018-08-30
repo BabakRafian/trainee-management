@@ -30,7 +30,7 @@
   <div class="panel panel-primary col-lg-4">
     <div class="panel-body list-group">
       <ul *ngFor="let trainee of trainees"> <!--Iterate through trainees array in component code-->
-        <li class="list-group-item">
+        <li class="list-group-item" [routerLink]="['/viewTrainee', trainee.trainee_id]">
           <button type="button" id="delete" class="btn btn-danger btn-xs" (click)="deleteTrainee(trainee)">X</button>
           {{trainee.trainee_id}}: {{trainee.first_name}} {{trainee.last_name}} ({{trainee.batch_id}})
         </li>

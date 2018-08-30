@@ -15,12 +15,13 @@ export class LoginService {
     })
   };
 
-  private loginUrl = 'http://localhost:8080/login';  // URL to web api
+  private loginUrl = 'http://localhost:3000/login';  // URL to web api
 
   constructor(private http: HttpClient, private router: Router, private messageService: MessageService) { }
+  
 
   validateUser(credentials: Credentials, cb:(status: any)=>any){
-    //this.messageService.clear();
+    this.messageService.clear();
     let message = {username: credentials.username, password: credentials.password}
     console.log('connecting to server...');
     //this.messageService.add('connecting to server... ');
@@ -32,14 +33,10 @@ export class LoginService {
       if(response){
         console.log('User is authenticated');
         this.router.navigate(['viewBatch']);
-        //this.messageService.add('The respose from server is: ' + response);
-        //this.messageService.add('User is authenticated');
+
       }else{
         console.log('User is NOT authenticated');
         this.messageService.add('Either Username or password is not correct! Try again');
-        //this.messageService.add('User is NOT authenticated');
-        //this.messageService.add('The response from server is: ' + response);
-        //this.userAccess = "User is not permitted";
       }
     });
   }

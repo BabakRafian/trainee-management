@@ -86,7 +86,7 @@ export class ViewBatchComponent implements OnInit {
     this._taskService.deleteBatchTask(_id, this.batchIdText)
     .subscribe(tsks => {
       this.tasks = tsks as Task[]
-      this.getBatchTasks();//Populate box with only this batch's tasks. Probably should separate delete/add tasks for batches/general
+      //this.getBatchTasks();//Populate box with only this batch's tasks. Probably should separate delete/add tasks for batches/general
     });
   }
 

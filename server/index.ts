@@ -10,11 +10,13 @@ var trainees = [];
 var tasks = [];
 var trainee;
 var domains = [];
-var cities = [];
+var cities = []
+
 app.use(cors());
 app.options('*', cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+
 /*
 *   CWM
 *   Returns the full list of trainees in the collection. This will be called when the page
@@ -34,6 +36,7 @@ app.route('/traineelist').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
 *   Returns the full list of trainees in the batch specified. This will be called when the page
@@ -52,6 +55,7 @@ app.route('/traineelist/batch').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
 *   This code will need to be "re-routed" or changed altogether since there is no longer
@@ -102,6 +106,7 @@ app.route('/traineelist/delete').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
 *   Queries the trainee collection for any trainee with the specified trainee_id.
@@ -126,6 +131,7 @@ app.route('/traineelist/batch/delete').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
 *   This query will return the trainee based on all of the fields being specified, just
@@ -156,56 +162,60 @@ app.route('/traineelist/search').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
 *   Returns one trainee from the trainees collection based on their trainee_id
 */
-app.route('/trainee').get(function (req, res) {
-    MongoClient.connect(dbUrl, { useNewUrlParser: true }, function (err, db) {
+app.route('/trainee').get((req, res) => {
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('trainees');
-        if (err)
-            console.log("Unable connect to database");
-        collection.find({ "trainee_id": req.query.trainee_id }).toArray(function (err, result) {
-            if (err)
-                throw err;
+        if( err ) console.log("Unable connect to database");
+        collection.find({"trainee_id": req.query.trainee_id}).toArray(function(err, result) {
+            if (err) throw err;
             db.close();
             trainee = result[0];
             res.status(200).send(trainee);
         });
     });
 });
+
 /*
 *   CWM
 *   Deletes a trainee's city preference from the trainees collection
 */
-app.route('/trainee/deletecity').get(function (req, res) {
-    MongoClient.connect(dbUrl, { useNewUrlParser: true }, function (err, db) {
+app.route('/trainee/deletecity').get((req, res) => {
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('trainees');
-        collection.updateOne({ "trainee_id": req.query.trainee_id }, { $pull: { "city_preferences": { city: req.query.city, state: req.query.state } } }, function (err, obj) {
-            collection.find({ "trainee_id": req.query.trainee_id }, { "city_preferences": 1, "_id": 0 }).forEach(function (element) {
-                cities = element.city_preferences;
-                console.log(cities);
-                res.status(200).send(cities); //Sends back trainees specific to that batch being viewed
-            });
-        });
+        collection.updateOne({"trainee_id": req.query.trainee_id}, {$pull: {"city_preferences": {city: req.query.city, state: req.query.state}}},
+                                function(err, obj) {
+                                    collection.find({"trainee_id": req.query.trainee_id}, {"city_preferences": 1, "_id": 0}).forEach(function(element) {
+                                        cities = element.city_preferences;
+                                        console.log(cities);
+                                        res.status(200).send(cities);//Sends back trainees specific to that batch being viewed
+                                    });
+                                });
     });
 });
+
 /*
 *   CWM
 *   Deletes a trainee's domain preference from the trainees collection, returns modified list
 */
-app.route('/trainee/deletedomain').get(function (req, res) {
-    MongoClient.connect(dbUrl, { useNewUrlParser: true }, function (err, db) {
+app.route('/trainee/deletedomain').get((req, res) => {
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var collection = db.db().collection('trainees');
-        collection.updateOne({ "trainee_id": req.query.trainee_id }, { $pull: { "domain_preferences": req.query.domain } }, function (err, obj) {
-            collection.find({ "trainee_id": req.query.trainee_id }, { "domain_preferences": 1, "_id": 0 }).forEach(function (element) {
-                domains = element.domain_preferences;
-                console.log(domains);
-                res.status(200).send(domains); //Sends back trainees specific to that batch being viewed
-            });
-        });
+        collection.updateOne({"trainee_id": req.query.trainee_id}, {$pull: {"domain_preferences": req.query.domain}},
+                                function(err, obj) {
+                                    collection.find({"trainee_id": req.query.trainee_id}, {"domain_preferences": 1, "_id": 0}).forEach(function(element) {
+                                        domains = element.domain_preferences;
+                                        console.log(domains);
+                                        res.status(200).send(domains);//Sends back trainees specific to that batch being viewed
+                                    });
+                                });
     });
 });
+
 /*
 *   CWM
 *   Queries the tasks collection for all of the tasks. Used when initially loading the page
@@ -224,6 +234,7 @@ app.route('/tasklist').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
 *   Queries the tasks collection for all of the tasks specific to a batch
@@ -241,6 +252,7 @@ app.route('/tasklist/batch').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
 *   Mapped to from the general tasks page. Adds a task to the tasks collecton as well as
@@ -269,6 +281,7 @@ app.route('/tasklist/addtask').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
 *   First adds a task to the tasks collection. Then it goes into the batches collection and updates the proper batch document
@@ -300,6 +313,7 @@ app.route('/tasklist/batch/addtask').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
 *   Queries the tasks collection for any task with the specified task_id.
@@ -326,14 +340,15 @@ app.route('/tasklist/deletetask').get(function (req, res) {
         });
     });
 });
+
 /*
 *   CWM
-*   Deletes the task for the specific batch then returns that batches tasks to repopulate the
+*   Deletes the task for the specific batch then returns that batches tasks to repopulate the 
 *   tasks list on the view batch page.
 */
-app.route('/tasklist/batch/deletetask').get(function (req, res) {
-    var delTask = { task_id: req.query.task_id };
-    MongoClient.connect(dbUrl, { useNewUrlParser: true }, function (err, db) {
+app.route('/tasklist/batch/deletetask').get((req, res) => {
+    let delTask = {task_id: req.query.task_id};
+    MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
         var batchesCollection = db.db().collection('batches');
         //Only use updateOne and specify a batch to delete from. Deleting a task from the batch view should only delete it from that batch
         batchesCollection.updateOne({ "batch_id": req.query.batch_id }, { $pull: { "tasks": { task_id: req.query.task_id } } }, function (err, obj) {
@@ -348,6 +363,7 @@ app.route('/tasklist/batch/deletetask').get(function (req, res) {
         });
     });
 });
+
 /**
  * Validates the user
  * @param username
@@ -367,6 +383,7 @@ function isValid(username, pass, cb) {
         });
     });
 }
+
 /**
  * handles login requests
  */
@@ -383,6 +400,7 @@ app.post('/login', function (request, response) {
         }
     });
 });
+
 var server = app.listen(3000, function () {
     var host = server.address().address;
     var port = server.address().port;

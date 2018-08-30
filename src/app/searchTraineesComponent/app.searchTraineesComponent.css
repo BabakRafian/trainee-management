@@ -36,6 +36,10 @@ li {
 	font-size: medium;
 	margin-left: -8%;
 	/*text-align: right;*/
+	cursor: pointer;
+}
+li:hover {
+	background-color: #DDDDDD;
 }
 
 input {
