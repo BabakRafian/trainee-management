@@ -336,11 +336,6 @@ app.route('/tasklist/deletetask').get((req, res) => {
 app.route('/tasklist/batch/deletetask').get((req, res) => {
     let delTask = {task_id: req.query.task_id};
     MongoClient.connect(dbUrl,{ useNewUrlParser: true}, function(err, db) {
-        var collection = db.db().collection('tasks');
-        collection.deleteOne(delTask, function(err, obj) {
-            if (err) throw err;
-            console.log("Task Deleted");
-        });
         var batchesCollection = db.db().collection('batches');
         //Only use updateOne and specify a batch to delete from. Deleting a task from the batch view should only delete it from that batch
         batchesCollection.updateOne({"batch_id": req.query.batch_id}, {$pull: {"tasks": {task_id: req.query.task_id}}},
